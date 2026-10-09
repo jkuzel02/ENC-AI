@@ -23,33 +23,22 @@ The dir `files/prompts` will contain this structure:
 files/prompts/
 ├── 1/
     ├── basic.md
-    └── structured.md
+    ├── structured.md
+    └── optimized.md
 ├── 2/
     ├── basic.md
-    └── structured.md
+    ├── structured.md
+    └── optimized.md
 ├── 3/
     ├── basic.md
-    └── structured.md
-...
-├── 30/
-    ├── basic.md
-    └── structured.md
-├── 31/
-    ├── basic.md
     ├── structured.md
-    └── optimalized.md
-├── 32/
-    ├── basic.md
-    ├── structured.md
-    └── optimalized.md
+    └── optimized.md
 ...
 ├── 40/
     ├── basic.md
     ├── structured.md
-    └── optimalized.md
+    └── optimized.md
 ```
-
-First 30 cases will contain only basic + structured prompts. The last 10 cases will contain an optimalized prompt (for now, the fill will remain empty, because it will be handled manually.)
 
 ### Structure of Prompts
 
@@ -61,6 +50,6 @@ Basic prompt is just a quick try. There is no perparation. It will only contain 
 
 Structured prompt has a set clear rules, roles and format. Use 6 architecture components (Persona/Role, Context/State, Instructions/Tasks, Constraints, Few-shot Examples, Expected Format of Output).
 
-#### Optimalized Prompts
+#### Optimized Prompts
 
-The optimalized prompts will for now stay clean, and will be handled after first 30 cases with the Basic + Structured Prompts for each. It will be the part, that will be handled manually.
+The optimized prompts will for now stay clean, and will be handled after the Basic + Structured Prompts for each. It will be the part, that will be handled manually.
