@@ -1,0 +1,19 @@
+{
+    "subject": "Enhancing Security for Medical Data Transmission Systems",
+    "body": "Hello Customer Support, I am writing to inquire about enhancing security for the transmission and storage of medical data. Given the sensitive nature of medical information, it is crucial that it is protected with the highest level of security to safeguard patient details. Could you please share the current encryption methods used by your organization and the steps taken to ensure the secure handling of medical data? Additionally, are there plans to introduce further security enhancements, such as multi-factor authentication and encryption key management? Your insights on this matter would be greatly appreciated. Thank you for your time and cooperation. I eagerly await your response.",
+    "answer": "Hello <name>, thank you for contacting our customer support team concerning the enhancement of security for medical data transmission and storage systems. We understand the importance of securing such sensitive information and currently employ advanced encryption techniques to protect patient data. Our company utilizes strong encryption protocols to ensure the secure transmission and storage of medical information. We are continuously evaluating and improving our security measures to address potential threats. Regarding the implementation of multi-factor authentication and encryption key management, we are indeed considering these additional security measures to further strengthen the protection of medical data. I would be glad to discuss this further with you and provide more detailed information about our current security protocols and future plans. If you are available for a discussion at a convenient time, please let me know a suitable time and I will contact you at <tel_num>.",
+    "type": "Change",
+    "queue": "Technical Support",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Security",
+    "tag_2": "Customer",
+    "tag_3": "Medical",
+    "tag_4": "Encryption",
+    "tag_5": "MultiFactorAuthentication",
+    "tag_6": "KeyManagement",
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Enhancing Security for Medical Data Transmission Systems Hello Customer Support, I am writing to inquire about enhancing security for the transmission and storage of medical data. Given the sensitive nature of medical information, it is crucial that it is protected with the highest level of security to safeguard patient details. Could you please share the current encryption methods used by your organization and the steps taken to ensure the secure handling of medical data? Additionally, are there plans to introduce further security enhancements, such as multi-factor authentication and encryption key management? Your insights on this matter would be greatly appreciated. Thank you for your time and cooperation. I eagerly await your response.",
+    "label": 9
+}

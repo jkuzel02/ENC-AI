@@ -1,0 +1,19 @@
+{
+    "subject": null,
+    "body": "To Whom It May Concern, I am contacting you to report a possible data breach, which may be related to outdated software. Despite my attempts to update various programs, including Snagit, Ansible, and Firebase, the problem continues. I am worried about the security of my data and would appreciate your help in addressing this issue promptly. Could you advise on the next steps or suggest a solution to prevent future breaches? I value your swift response to this matter and eagerly await your guidance. Please inform me if you require any further information to assist me. I can be reached at your convenience to discuss this further. Thank you for your support in resolving this issue. Please provide any necessary reference number <ref_num> for my records, and I look forward to your prompt follow-up.",
+    "answer": "Dear <name>, We acknowledge your email regarding a suspected data breach possibly due to outdated software. We regret any concern this has caused and thank you for your proactive attempts to update your programs. To better assist you, we need additional information regarding the breach. Could you please share details on the updates you've installed and any error messages you've encountered? Additionally, it would be useful to know the specific data you believe has been compromised. I am available for a phone call if you prefer. Please let me know a convenient time for you. In the meantime, I have assigned a reference number <ref_num> to your case and will contact you within the next 24 hours. Thank you for bringing this matter to our attention, and we look forward to resolving it promptly for you.",
+    "type": "Incident",
+    "queue": "Product Support",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Security",
+    "tag_2": "Breach",
+    "tag_3": "Technical",
+    "tag_4": "Outdated Software",
+    "tag_5": "Follow-Up",
+    "tag_6": "Guidance",
+    "tag_7": "Documentation",
+    "tag_8": "Reference Number",
+    "text": " To Whom It May Concern, I am contacting you to report a possible data breach, which may be related to outdated software. Despite my attempts to update various programs, including Snagit, Ansible, and Firebase, the problem continues. I am worried about the security of my data and would appreciate your help in addressing this issue promptly. Could you advise on the next steps or suggest a solution to prevent future breaches? I value your swift response to this matter and eagerly await your guidance. Please inform me if you require any further information to assist me. I can be reached at your convenience to discuss this further. Thank you for your support in resolving this issue. Please provide any necessary reference number <ref_num> for my records, and I look forward to your prompt follow-up.",
+    "label": 5
+}

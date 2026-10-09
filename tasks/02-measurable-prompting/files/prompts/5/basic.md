@@ -1,0 +1,4 @@
+Extract the data from the given ticket to a JSON format.
+
+Subject: Problem with Integration
+Body: The integration stopped working unexpectedly, causing synchronization errors between our platforms. This might be due to recent modifications to the API. Despite attempting to restart services and examining logs, the problem remains unresolved. I would be grateful for your help in addressing this issue.

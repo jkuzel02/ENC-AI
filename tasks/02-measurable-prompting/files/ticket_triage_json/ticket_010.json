@@ -1,0 +1,19 @@
+{
+    "subject": "Urgent: Data Breach Identified in Hospital Network",
+    "body": "Data breach found, assistance required",
+    "answer": "Please handle this data breach with urgency. Kindly share the specifics of the issue at hand and an expert will be assigned to assist you promptly.",
+    "type": "Incident",
+    "queue": "Technical Support",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Security",
+    "tag_2": "Network",
+    "tag_3": "Outage",
+    "tag_4": "IT",
+    "tag_5": null,
+    "tag_6": null,
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Urgent: Data Breach Identified in Hospital Network Data breach found, assistance required",
+    "label": 9
+}

@@ -1,0 +1,19 @@
+{
+    "subject": "Problem with Integration",
+    "body": "The integration stopped working unexpectedly, causing synchronization errors between our platforms. This might be due to recent modifications to the API. Despite attempting to restart services and examining logs, the problem remains unresolved. I would be grateful for your help in addressing this issue.",
+    "answer": "I will look into the problem and call you at <tel_num> to discuss it further and arrange a convenient time for resolution.",
+    "type": "Problem",
+    "queue": "IT Support",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Technical",
+    "tag_2": "Integration",
+    "tag_3": "Bug",
+    "tag_4": "Resolution",
+    "tag_5": "Outage",
+    "tag_6": "Documentation",
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Problem with Integration The integration stopped working unexpectedly, causing synchronization errors between our platforms. This might be due to recent modifications to the API. Despite attempting to restart services and examining logs, the problem remains unresolved. I would be grateful for your help in addressing this issue.",
+    "label": 4
+}

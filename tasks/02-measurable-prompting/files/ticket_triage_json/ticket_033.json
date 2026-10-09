@@ -1,0 +1,19 @@
+{
+    "subject": "Support Needed",
+    "body": "Customer Support, facing issues with unauthorized access attempts to medical data in my report. The problems might be due to outdated security protocols. Despite efforts to enhance encryption and update system settings, these measures have been unsuccessful. I would greatly appreciate some guidance to resolve the issue and prevent similar occurrences in the future. Please let me know the next steps to take. Thank you for your assistance, and I look forward to hearing from you soon.",
+    "answer": "<name>, thank you for reporting unauthorized access attempts to medical data. I understand your concern and would be happy to help. To better assist you, could you discuss the issue further and provide details on the current security protocols and the updates that have been attempted? I will be available to call at <tel_num> to guide you through the next steps to enhance the security of the system and prevent future occurrences. Please let me know a suitable time to call. I look forward to speaking with you soon.",
+    "type": "Problem",
+    "queue": "Billing and Payments",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Security",
+    "tag_2": "IT",
+    "tag_3": "Tech Support",
+    "tag_4": "Performance",
+    "tag_5": null,
+    "tag_6": null,
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Support Needed Customer Support, facing issues with unauthorized access attempts to medical data in my report. The problems might be due to outdated security protocols. Despite efforts to enhance encryption and update system settings, these measures have been unsuccessful. I would greatly appreciate some guidance to resolve the issue and prevent similar occurrences in the future. Please let me know the next steps to take. Thank you for your assistance, and I look forward to hearing from you soon.",
+    "label": 0
+}

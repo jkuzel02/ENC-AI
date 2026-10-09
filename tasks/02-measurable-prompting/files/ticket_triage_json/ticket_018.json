@@ -1,0 +1,19 @@
+{
+    "subject": "Problem with Software Update",
+    "body": "Data analytics functions are disrupted following the latest software update. Efforts to restart and reinstall the software have been unsuccessful.",
+    "answer": "We apologize for the disruption caused by the recent software update. We would like to investigate and resolve the issue with your data analytics. Could you please provide any error messages you are seeing? For your convenience, we are available to discuss possible solutions over a call at <tel_num>. ",
+    "type": "Incident",
+    "queue": "Technical Support",
+    "priority": "medium",
+    "language": "en",
+    "tag_1": "Bug",
+    "tag_2": "Performance",
+    "tag_3": "Feature",
+    "tag_4": "IT",
+    "tag_5": "Tech Support",
+    "tag_6": null,
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Problem with Software Update Data analytics functions are disrupted following the latest software update. Efforts to restart and reinstall the software have been unsuccessful.",
+    "label": 9
+}

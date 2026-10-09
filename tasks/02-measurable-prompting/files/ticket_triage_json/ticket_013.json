@@ -1,0 +1,19 @@
+{
+    "subject": "Problem with Data Analytics Software Frequent Crashes",
+    "body": "The data analytics software used by the financial firm is experiencing frequent crashes, likely due to RAM limitations and software conflicts.",
+    "answer": "Dear [Name], we apologize for the frequent crashes of your data analytics software. We will investigate potential causes, including RAM limitations and software conflicts. Please provide us with details of any error messages you are receiving and your system configuration. To better assist you, please schedule a call at <tel_num> and we can discuss a solution for your <acc_num> account. We will get back to you shortly with the next steps.",
+    "type": "Problem",
+    "queue": "Technical Support",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Bug",
+    "tag_2": "Crash",
+    "tag_3": "Performance",
+    "tag_4": "Hardware",
+    "tag_5": "IT",
+    "tag_6": "Tech Support",
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Problem with Data Analytics Software Frequent Crashes The data analytics software used by the financial firm is experiencing frequent crashes, likely due to RAM limitations and software conflicts.",
+    "label": 9
+}

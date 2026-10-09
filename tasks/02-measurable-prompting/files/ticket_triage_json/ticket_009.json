@@ -1,0 +1,19 @@
+{
+    "subject": "Issue with Website Analytics Dashboard",
+    "body": "Dear Customer Support, I am encountering a problem with my website analytics dashboard that is not updating. I believe there might be an issue with the API connection. I have already restarted the dashboard and verified my credentials, yet the problem still exists. Could you please investigate and offer a solution at your earliest convenience? If you require any additional information from me, please let me know. Thank you for your assistance, and I look forward to your response.",
+    "answer": "Dear <name>, we regret the inconvenience you have experienced with your website analytics dashboard. We will look into the potential API connection issue. Could you please provide your <acc_num> and any specific error messages you are receiving so we can assist you further?",
+    "type": "Incident",
+    "queue": "Technical Support",
+    "priority": "low",
+    "language": "en",
+    "tag_1": "Technical",
+    "tag_2": "Bug",
+    "tag_3": "API",
+    "tag_4": "Documentation",
+    "tag_5": "Resolution",
+    "tag_6": "Customer",
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Issue with Website Analytics Dashboard Dear Customer Support, I am encountering a problem with my website analytics dashboard that is not updating. I believe there might be an issue with the API connection. I have already restarted the dashboard and verified my credentials, yet the problem still exists. Could you please investigate and offer a solution at your earliest convenience? If you require any additional information from me, please let me know. Thank you for your assistance, and I look forward to your response.",
+    "label": 9
+}

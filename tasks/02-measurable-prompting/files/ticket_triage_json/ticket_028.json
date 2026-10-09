@@ -1,0 +1,19 @@
+{
+    "subject": "Tech Support Inquiry",
+    "body": "I am contacting you to ask about the integration possibilities for ClickUp within my existing technology infrastructure. Could you send me a detailed list of tools that are compatible with ClickUp and a short explanation of their integration features? Additionally, I would be grateful for any instructions on setting up these integrations and any supplementary materials you can provide.",
+    "answer": "Dear <name>, we have noted your email concerning ClickUp's integration options. We offer several compatible tools that can integrate with ClickUp, such as Google Drive, Trello, and Slack. We can send you a list with brief descriptions of their integration processes. If you need setup instructions and further resources, we are available to call you at your convenience. Would you be free for a call at <tel_num> or do you prefer a different time?",
+    "type": "Request",
+    "queue": "IT Support",
+    "priority": "medium",
+    "language": "en",
+    "tag_1": "Technical",
+    "tag_2": "Integration",
+    "tag_3": "Tool",
+    "tag_4": "Guidance",
+    "tag_5": "Documentation",
+    "tag_6": null,
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Tech Support Inquiry I am contacting you to ask about the integration possibilities for ClickUp within my existing technology infrastructure. Could you send me a detailed list of tools that are compatible with ClickUp and a short explanation of their integration features? Additionally, I would be grateful for any instructions on setting up these integrations and any supplementary materials you can provide.",
+    "label": 4
+}

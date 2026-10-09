@@ -1,0 +1,19 @@
+{
+    "subject": "Support Request for Data Breach Issue",
+    "body": "There has been an unexpected data breach that may have compromised sensitive medical data. This is likely due to insufficient security measures and outdated software. Actions taken include securing the system, updating passwords, and monitoring network activity. Assistance is needed to ensure the necessary steps are taken to protect sensitive information and prevent future breaches.",
+    "answer": "Please review the case and contact +1-800-123-4567 to discuss the necessary assistance.",
+    "type": "Incident",
+    "queue": "Customer Service",
+    "priority": "low",
+    "language": "en",
+    "tag_1": "Security",
+    "tag_2": "Virus",
+    "tag_3": "IT",
+    "tag_4": "Tech Support",
+    "tag_5": null,
+    "tag_6": null,
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Support Request for Data Breach Issue There has been an unexpected data breach that may have compromised sensitive medical data. This is likely due to insufficient security measures and outdated software. Actions taken include securing the system, updating passwords, and monitoring network activity. Assistance is needed to ensure the necessary steps are taken to protect sensitive information and prevent future breaches.",
+    "label": 1
+}

@@ -1,0 +1,19 @@
+{
+    "subject": "Urgent: Identification of a Data Breach within the Patient Records System",
+    "body": "Breach in data identified",
+    "answer": "Commencing immediate investigation into the data breach",
+    "type": "Incident",
+    "queue": "Customer Service",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Breach",
+    "tag_2": "Security",
+    "tag_3": "Incident",
+    "tag_4": "Resolution",
+    "tag_5": "Investigation",
+    "tag_6": null,
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Urgent: Identification of a Data Breach within the Patient Records System Breach in data identified",
+    "label": 1
+}

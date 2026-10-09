@@ -1,0 +1,19 @@
+{
+    "subject": "Problem with Invoice",
+    "body": "I am encountering a problem with my invoice. The amount shown online is not accurate. I have attempted to resolve this by refreshing the page and signing out then back in, but the issue still exists. I believe it might be a technical error or a data synchronization issue. Can you please investigate this for me and give me a corrected invoice total?",
+    "answer": "In response to your email about the incorrect total on your invoice, I want to acknowledge the inconvenience this has caused you. To better assist you, could you provide your account number and the specific invoice number you are referring to? I will look into the matter and determine the reason for the discrepancy. If necessary, I may need to contact you to discuss further; please let me know your availability for a call at your convenience. We aim to provide you with the corrected invoice total as soon as possible. Please let me know if you have any additional information that can help resolve this issue.",
+    "type": "Incident",
+    "queue": "Billing and Payments",
+    "priority": "low",
+    "language": "en",
+    "tag_1": "Billing",
+    "tag_2": "Technical",
+    "tag_3": "Invoice",
+    "tag_4": "Payment",
+    "tag_5": "Account",
+    "tag_6": "Bug",
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Problem with Invoice I am encountering a problem with my invoice. The amount shown online is not accurate. I have attempted to resolve this by refreshing the page and signing out then back in, but the issue still exists. I believe it might be a technical error or a data synchronization issue. Can you please investigate this for me and give me a corrected invoice total?",
+    "label": 0
+}

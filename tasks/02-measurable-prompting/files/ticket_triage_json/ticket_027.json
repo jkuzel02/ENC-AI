@@ -1,0 +1,19 @@
+{
+    "subject": "Support for Data Analytics Platform Crash",
+    "body": "The data analytics platform encountered issues while processing client investment reports due to high server load and software conflicts, despite restarting applications and checking for updates. The problem continues and requires your assistance.",
+    "answer": "We need your help to resolve the crash on the Data Analytics Platform. Please provide any error messages and assist with troubleshooting.",
+    "type": "Incident",
+    "queue": "IT Support",
+    "priority": "medium",
+    "language": "en",
+    "tag_1": "Crash",
+    "tag_2": "Performance",
+    "tag_3": "IT",
+    "tag_4": "Tech Support",
+    "tag_5": null,
+    "tag_6": null,
+    "tag_7": null,
+    "tag_8": null,
+    "text": "Support for Data Analytics Platform Crash The data analytics platform encountered issues while processing client investment reports due to high server load and software conflicts, despite restarting applications and checking for updates. The problem continues and requires your assistance.",
+    "label": 4
+}

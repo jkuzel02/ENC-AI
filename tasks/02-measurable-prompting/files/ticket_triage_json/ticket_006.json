@@ -1,0 +1,19 @@
+{
+    "subject": "Issue with Data Analytics Platform - Insufficient RAM Allocation",
+    "body": "I am reaching out to report an issue with our data analytics platform. The platform has crashed, and we believe it might be due to inadequate RAM allocation. We have already tried restarting the server and reviewing the logs, but the problem still exists. We kindly request your assistance in investigating this matter and providing a resolution at your earliest convenience. Please inform us if any additional information from our side is necessary to address this issue. The platform is currently unavailable, and we urgently need it to be operational. Thank you for your consideration and support.",
+    "answer": "Your email regarding the data analytics platform issue has been received. I regret the disruption caused by the platform's downtime. To better understand and resolve the situation, could you please share the server details and the log files you have examined thus far? Additionally, could you provide the current RAM allocation and the recommended amount for the platform? If scheduling a call would be helpful, I can arrange a time to discuss this matter in greater detail and develop a solution to restore the platform's functionality as swiftly as possible. Please suggest a convenient time for the call.",
+    "type": "Problem",
+    "queue": "Technical Support",
+    "priority": "high",
+    "language": "en",
+    "tag_1": "Technical",
+    "tag_2": "Outage",
+    "tag_3": "Crash",
+    "tag_4": "Resolution",
+    "tag_5": "Disruption",
+    "tag_6": "Guidance",
+    "tag_7": "Documentation",
+    "tag_8": null,
+    "text": "Issue with Data Analytics Platform - Insufficient RAM Allocation I am reaching out to report an issue with our data analytics platform. The platform has crashed, and we believe it might be due to inadequate RAM allocation. We have already tried restarting the server and reviewing the logs, but the problem still exists. We kindly request your assistance in investigating this matter and providing a resolution at your earliest convenience. Please inform us if any additional information from our side is necessary to address this issue. The platform is currently unavailable, and we urgently need it to be operational. Thank you for your consideration and support.",
+    "label": 9
+}
