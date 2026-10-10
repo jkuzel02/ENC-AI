@@ -1,0 +1,4 @@
+Extract data from the given ticket to a JSON format.
+
+Subject: Request for Assistance with Data Integration
+Body: We are encountering data integration problems while optimizing investments using analytics tools. These issues might be due to unexpected software compatibility problems between various applications. Despite updating the software and checking for configuration errors, the problem continues. We would greatly appreciate your guidance in resolving this matter to ensure a smooth data flow and accurate analysis. Please inform us of the next steps to address this issue.

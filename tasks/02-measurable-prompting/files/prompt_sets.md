@@ -1,10 +1,10 @@
 # Prompt sets
 
-Cases 1–20 are train/development, 21–30 validation, and 31–40 test. Case N maps directly to `raw_tickets_texts/raw_ticket_NNN.txt`; the original order is preserved.
+Each of chatgpt, gemini, grok, and perplexity contains train/1–20, validate/21–30, and test/31–40. Case N uses files/raw_tickets_texts/<split>/raw_ticket_NNN.txt in its original order.
 
-The explicit directory layout in AGENTS.md defines 40 numbered case directories, each containing basic.md, structured.md, and optimized.md: 120 Markdown files in total. This follows the detailed layout despite the introductory wording "40 prompt files in total".
+The detailed AGENTS.md layout specifies 40 cases per model, with three prompt files per case: 480 Markdown files across four models. This follows the explicit layout despite the introductory wording "40 prompt files in total".
 
-Each basic.md contains the required instruction followed directly by its matching original raw ticket, without ticket boundary markers. Each structured.md embeds that same original ticket and uses the six required architecture components, with a consistent extraction schema, rules, and fictional examples across all splits. No reference JSON answers or dataset labels are included. The structured schema extracts ticket evidence and uncertainty rather than predicting unavailable support replies or internal routing labels. Every optimized.md is empty for manual completion.
+Basic prompts contain the required sentence followed by the original ticket text. Structured prompts use all six architecture components and output only subject, body, type, queue, priority, and language. Their fictional examples and classification rules are identical across models and splits for comparable evaluation. Type, queue, and priority are inferred using those rules; they are not guaranteed to match dataset labels that are unavailable in the raw ticket. Queue uses the four allowed categories specified in AGENTS.md; language is en. No reference JSON answers or dataset labels are embedded. Optimized prompts are empty for manual completion.
 
 ## Existing edge cases
 

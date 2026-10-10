@@ -1,4 +1,0 @@
-Extract the data from the given ticket to a JSON format.
-
-Subject: Enhancing Security for Medical Data Transmission Systems
-Body: Hello Customer Support, I am writing to inquire about enhancing security for the transmission and storage of medical data. Given the sensitive nature of medical information, it is crucial that it is protected with the highest level of security to safeguard patient details. Could you please share the current encryption methods used by your organization and the steps taken to ensure the secure handling of medical data? Additionally, are there plans to introduce further security enhancements, such as multi-factor authentication and encryption key management? Your insights on this matter would be greatly appreciated. Thank you for your time and cooperation. I eagerly await your response.
