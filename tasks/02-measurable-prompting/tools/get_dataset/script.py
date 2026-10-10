@@ -11,35 +11,36 @@ dataset = load_dataset(
 )
 
 
-# Create output directory
-output_dir = Path("ticket_triage_json")
-output_dir.mkdir(parents=True, exist_ok=True)
+# Export the first 20 tickets for training, the next 10 for validation,
+# and the last 10 for testing. Preserve the original ticket numbers.
+json_output_dir = Path("ticket_triage_json")
+text_output_dir = Path("raw_tickets_texts")
+json_fields = ("subject", "body", "type", "queue", "priority", "language")
+splits = (("train", 0, 20), ("validate", 20, 30), ("test", 30, 40))
 
+for split_name, start, end in splits:
+    json_dir = json_output_dir / split_name
+    text_dir = text_output_dir / split_name
+    json_dir.mkdir(parents=True, exist_ok=True)
+    text_dir.mkdir(parents=True, exist_ok=True)
 
-# Save each row as a separate JSON file
-for i, row in enumerate(dataset, start=1):
-    file_path = output_dir / f"ticket_{i:03d}.json"
+    count = 0
+    for index in range(start, min(end, len(dataset))):
+        row = dataset[index]
+        ticket_number = index + 1
+        ticket = {field: row.get(field) for field in json_fields}
 
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(row, f, indent=4, ensure_ascii=False)
+        file_path = json_dir / f"ticket_{ticket_number:03d}.json"
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(ticket, f, indent=4, ensure_ascii=False)
 
-print(f"Saved {len(dataset)} JSON files to {output_dir}")
+        subject = row.get("subject") or ""
+        body = row.get("body") or ""
+        raw_ticket = f"Subject: {subject}\nBody: {body}"
 
+        file_path = text_dir / f"raw_ticket_{ticket_number:03d}.txt"
+        file_path.write_text(raw_ticket, encoding="utf-8")
+        count += 1
 
-# Create output directory
-output_dir = Path("raw_tickets_texts")
-output_dir.mkdir(parents=True, exist_ok=True)
-
-
-# Save each ticket as a separate TXT file
-for i, row in enumerate(dataset, start=1):
-    subject = row.get("subject") or ""
-    body = row.get("body") or ""
-
-    raw_ticket = f"Subject: {subject}\nBody: {body}"
-
-    file_path = output_dir / f"raw_ticket_{i:03d}.txt"
-
-    file_path.write_text(raw_ticket, encoding="utf-8")
-
-print(f"Saved {len(dataset)} raw tickets to {output_dir}")
+    print(f"Saved {count} JSON files to {json_dir}")
+    print(f"Saved {count} raw tickets to {text_dir}")
