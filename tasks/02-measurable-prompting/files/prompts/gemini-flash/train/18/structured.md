@@ -69,3 +69,5 @@ BEGIN TICKET
 Subject: Problem with Software Update
 Body: Data analytics functions are disrupted following the latest software update. Efforts to restart and reinstall the software have been unsuccessful.
 END TICKET
+
+ANSWER: {"subject": "Problem with Software Update", "body": "Data analytics functions are disrupted following the latest software update. Efforts to restart and reinstall the software have been unsuccessful.", "type": "Incident", "queue": "Technical Support", "priority": "medium", "language": "en"}

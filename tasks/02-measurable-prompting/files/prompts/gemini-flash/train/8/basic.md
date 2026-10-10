@@ -2,3 +2,12 @@ Extract data from the given ticket to a JSON format.
 
 Subject: Strategies for Brand Expansion
 Body: Hello Customer Support Team, I am writing to seek advice on digital methods that can aid in expanding my brand. In the current digital era, a robust online footprint is essential for business success. I am keen to learn about the strategies you suggest for boosting brand visibility and attracting more customers. Particularly, I am interested in exploring social media marketing, search engine optimization, and content development. I think applying the appropriate digital strategies could significantly advance my brand. Would you be able to offer some insights on this? I look forward to your response. Thanks for your time and support.
+
+ANSWER: ```json
+{
+  "subject": "Strategies for Brand Expansion",
+  "body": "Hello Customer Support Team, I am writing to seek advice on digital methods that can aid in expanding my brand. In the current digital era, a robust online footprint is essential for business success. I am keen to learn about the strategies you suggest for boosting brand visibility and attracting more customers. Particularly, I am interested in exploring social media marketing, search engine optimization, and content development. I think applying the appropriate digital strategies could significantly advance my brand. Would you be able to offer some insights on this? I look forward to your response. Thanks for your time and support.",
+  "priority": "medium",
+  "category": "Technical Issue"
+}
+```

@@ -69,3 +69,5 @@ BEGIN TICKET
 Subject: Strategies for Enhancing Digital Brand Growth
 Body: I hope this message finds you well. I am interested in learning about effective digital strategies that can help boost brand growth and engagement for businesses. Could you share some insights or recommendations on this matter? Your input would be greatly appreciated.
 END TICKET
+
+ANSWER: {"subject": "Strategies for Enhancing Digital Brand Growth", "body": "I hope this message finds you well. I am interested in learning about effective digital strategies that can help boost brand growth and engagement for businesses. Could you share some insights or recommendations on this matter? Your input would be greatly appreciated.", "type": "Request", "queue": "Customer Service", "priority": "medium", "language": "en"}

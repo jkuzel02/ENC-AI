@@ -69,3 +69,5 @@ BEGIN TICKET
 Subject: Urgent: Identification of a Data Breach within the Patient Records System
 Body: Breach in data identified
 END TICKET
+
+ANSWER: {"subject": "Urgent: Identification of a Data Breach within the Patient Records System", "body": "Breach in data identified", "type": "Incident", "queue": "Customer Service", "priority": "high", "language": "en"}
