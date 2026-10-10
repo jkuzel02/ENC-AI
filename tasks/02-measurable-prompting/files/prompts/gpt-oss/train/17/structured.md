@@ -71,3 +71,4 @@ Body: Could you provide guidelines on securing medical data on macOS systems usi
 END TICKET
 
 ANSWER: {"subject": "Guidelines for Securing Medical Data on macOS Systems with Symantec Endpoint Protection", "body": "Could you provide guidelines on securing medical data on macOS systems using Symantec Endpoint Protection? Thank you for your assistance.", "type": "Problem", "queue": "Technical Support", "priority": "medium", "language": "en"}
+ANSWER: {"subject": "Guidelines for Securing Medical Data on macOS Systems with Symantec Endpoint Protection", "body": "Could you provide guidelines on securing medical data on macOS systems using Symantec Endpoint Protection? Thank you for your assistance.", "type": "Problem", "queue": "Technical Support", "priority": "medium", "language": "en"}

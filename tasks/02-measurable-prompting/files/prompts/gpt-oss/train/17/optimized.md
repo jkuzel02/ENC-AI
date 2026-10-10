@@ -1,0 +1,2 @@
+
+ANSWER: {"subject": "Guidelines for Securing Medical Data on macOS Systems with Symantec Endpoint Protection", "body": "Could you provide guidelines on securing medical data on macOS systems using Symantec Endpoint Protection? Thank you for your assistance.", "type": "Problem", "queue": "Customer Service", "priority": "medium", "language": "en"}

@@ -71,3 +71,4 @@ Body: There has been a noticeable slowdown in the data analytics platform. It mi
 END TICKET
 
 ANSWER: {"subject": "Slowness observed in the data analytics platform", "body": "There has been a noticeable slowdown in the data analytics platform. It might be due to inadequate server resources. Despite restarting the servers and verifying the configurations, the problem continues.", "type": "Problem", "queue": "Technical Support", "priority": "medium", "language": "en"}
+ANSWER: {"subject": "Slowness observed in the data analytics platform", "body": "There has been a noticeable slowdown in the data analytics platform. It might be due to inadequate server resources. Despite restarting the servers and verifying the configurations, the problem continues.", "type": "Problem", "queue": "Technical Support", "priority": "medium", "language": "en"}

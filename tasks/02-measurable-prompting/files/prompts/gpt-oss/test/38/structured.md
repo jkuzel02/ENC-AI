@@ -71,3 +71,4 @@ Body: Faced an SQL Server outage that disrupted data analytics processing, impac
 END TICKET
 
 ANSWER: {"subject": "Problem with SQL Server Downtime", "body": "Faced an SQL Server outage that disrupted data analytics processing, impacting investment optimization. The outage might be due to high query loads on the server. Restarted the SQL Service and reviewed the server logs for any errors.", "type": "Incident", "queue": "IT Support", "priority": "high", "language": "en"}
+ANSWER: {"subject": "Problem with SQL Server Downtime", "body": "Faced an SQL Server outage that disrupted data analytics processing, impacting investment optimization. The outage might be due to high query loads on the server. Restarted the SQL Service and reviewed the server logs for any errors.", "type": "Incident", "queue": "IT Support", "priority": "high", "language": "en"}

@@ -71,3 +71,4 @@ Body: The scanner is not functioning correctly because of old drivers and recent
 END TICKET
 
 ANSWER: {"subject": "Technical Help", "body": "The scanner is not functioning correctly because of old drivers and recent macOS updates. Despite efforts to restart, update software, and reinstall drivers, the problem remains unresolved.", "type": "Problem", "queue": "Technical Support", "priority": "medium", "language": "en"}
+ANSWER: {"subject": "Technical Help", "body": "The scanner is not functioning correctly because of old drivers and recent macOS updates. Despite efforts to restart, update software, and reinstall drivers, the problem remains unresolved.", "type": "Problem", "queue": "Technical Support", "priority": "medium", "language": "en"}

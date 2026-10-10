@@ -1,0 +1,2 @@
+
+ANSWER: {"subject": "Urgent: Data Breach Identified in Hospital Network", "body": "Data breach found, assistance required", "type": "Incident", "queue": "IT Support", "priority": "high", "language": "en"}

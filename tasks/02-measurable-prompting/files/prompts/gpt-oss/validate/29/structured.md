@@ -71,3 +71,4 @@ Body: Seeking information on digital marketing tactics for brand growth. Please 
 END TICKET
 
 ANSWER: {"subject": "Support for Expanding a Brand", "body": "Seeking information on digital marketing tactics for brand growth. Please provide specifics on the services you offer.", "type": "Request", "queue": "Customer Service", "priority": "low", "language": "en"}
+ANSWER: {"subject": "Support for Expanding a Brand", "body": "Seeking information on digital marketing tactics for brand growth. Please provide specifics on the services you offer.", "type": "Request", "queue": "Customer Service", "priority": "low", "language": "en"}

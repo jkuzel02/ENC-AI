@@ -71,3 +71,4 @@ Body: Customer support, reaching out for inquiries about digital strategy servic
 END TICKET
 
 ANSWER: {"subject": "Expansion of Digital Brand", "body": "Customer support, reaching out for inquiries about digital strategy services to aid in brand growth. Would appreciate detailed information and pricing for the services offered. Thank you for your assistance, and I look forward to hearing back soon.", "type": "Request", "queue": "Customer Service", "priority": "low", "language": "en"}
+ANSWER: {"subject": "Expansion of Digital Brand", "body": "Customer support, reaching out for inquiries about digital strategy services to aid in brand growth. Would appreciate detailed information and pricing for the services offered. Thank you for your assistance, and I look forward to hearing back soon.", "type": "Request", "queue": "Customer Service", "priority": "low", "language": "en"}

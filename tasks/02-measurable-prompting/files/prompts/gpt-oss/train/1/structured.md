@@ -71,3 +71,4 @@ Body: Seeking information on digital strategies that can aid in brand growth and
 END TICKET
 
 ANSWER: {"subject": "Customer Support Inquiry", "body": "Seeking information on digital strategies that can aid in brand growth and details on the available services. Looking forward to learning more to help our business grow. Thank you, and I look forward to hearing from you soon.", "type": "Request", "queue": "Customer Service", "priority": "low", "language": "en"}
+ANSWER: {"subject": "Customer Support Inquiry", "body": "Seeking information on digital strategies that can aid in brand growth and details on the available services. Looking forward to learning more to help our business grow. Thank you, and I look forward to hearing from you soon.", "type": "Request", "queue": "Customer Service", "priority": "low", "language": "en"}
