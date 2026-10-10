@@ -69,3 +69,5 @@ BEGIN TICKET
 Subject: Urgent: Data Breach Identified in Hospital Network
 Body: Data breach found, assistance required
 END TICKET
+
+ANSWER: {"subject":"Urgent: Data Breach Identified in Hospital Network","body":"Data breach found, assistance required","type":"Incident","queue":"IT Support","priority":"high","language":"en"}

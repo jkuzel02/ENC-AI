@@ -69,3 +69,5 @@ BEGIN TICKET
 Subject: Support for Digital Marketing
 Body: Request for enhancements in digital marketing tools integration to optimize software performance. Aim is to enable effective brand growth strategies and improve the overall customer experience. Appreciate if could look into this matter and provide a solution as soon as possible. Thank you for your time and assistance.
 END TICKET
+
+ANSWER: {"subject":"Support for Digital Marketing","body":"Request for enhancements in digital marketing tools integration to optimize software performance. Aim is to enable effective brand growth strategies and improve the overall customer experience. Appreciate if could look into this matter and provide a solution as soon as possible. Thank you for your time and assistance.","type":"Change","queue":"Technical Support","priority":"medium","language":"en"}
