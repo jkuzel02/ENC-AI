@@ -94,4 +94,7 @@ Model | Split | Case | Prompt type | Correct JSON format | Accuracy & completene
 ```
 
 Add a short summary by model and prompt type after the detailed table. Base every metric and note on evidence from the ticket and the expected output rules. Do not invent results for files that were not processed.
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3bc4809 (feat: add answers for gptoss)

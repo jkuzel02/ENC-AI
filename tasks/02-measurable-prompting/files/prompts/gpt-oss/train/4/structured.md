@@ -69,3 +69,5 @@ BEGIN TICKET
 Subject: Concerns About Securing Medical Data on 2-in-1 Convertible Laptop with Norton 360
 Body: Inquiring about best practices for securing medical data on a 2-in-1 Convertible Laptop. Currently have Norton 360 installed and need guidance on how to properly configure it to protect sensitive medical information. Would greatly appreciate any tips or recommendations you can offer.
 END TICKET
+
+ANSWER: {"subject": "Concerns About Securing Medical Data on 2-in-1 Convertible Laptop with Norton 360", "body": "Inquiring about best practices for securing medical data on a 2-in-1 Convertible Laptop. Currently have Norton 360 installed and need guidance on how to properly configure it to protect sensitive medical information. Would greatly appreciate any tips or recommendations you can offer.", "type": "Request", "queue": "Customer Service", "priority": "low", "language": "en"}

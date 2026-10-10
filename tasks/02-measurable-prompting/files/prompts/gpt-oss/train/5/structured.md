@@ -69,3 +69,5 @@ BEGIN TICKET
 Subject: Problem with Integration
 Body: The integration stopped working unexpectedly, causing synchronization errors between our platforms. This might be due to recent modifications to the API. Despite attempting to restart services and examining logs, the problem remains unresolved. I would be grateful for your help in addressing this issue.
 END TICKET
+
+ANSWER: {"subject": "Problem with Integration", "body": "The integration stopped working unexpectedly, causing synchronization errors between our platforms. This might be due to recent modifications to the API. Despite attempting to restart services and examining logs, the problem remains unresolved. I would be grateful for your help in addressing this issue.", "type": "Incident", "queue": "IT Support", "priority": "high", "language": "en"}
