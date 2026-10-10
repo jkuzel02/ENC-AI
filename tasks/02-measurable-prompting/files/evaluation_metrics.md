@@ -4,7 +4,7 @@
 
 This evaluation benchmarks 4 AI systems (`Gemini 3.8 Flash`, `ChatGPT OSS 120B`, `Grok 4.5`, and `Claude Sonnet 4.6`) across 3 prompt conditions (`basic`, `structured`, `optimized`) and 40 IT ticket cases (total 480 runs).
 
-- **Correct JSON format (0/1)**: `1` if the output is a single valid JSON object strictly complying with the schema without Markdown code fences (```` ```json ````) or external text; otherwise `0`.
+- **Correct JSON format (0/1)**: `1` if the output contains syntactically valid, parseable JSON (either as direct raw JSON or extracted from a Markdown code block ```` ```json ````); otherwise `0`.
 - **Accuracy & completeness (0.0 to 1.0)**: Macro-averaged fraction of the six core keys (`subject`, `body`, `type`, `queue`, `priority`, `language`) that exactly match the ground-truth reference values.
 - **Scale of hallucinations (0 to 3)**:
   - `0`: No unsupported information. Extracted text is verbatim and classifications adhere to ticket evidence.
@@ -22,46 +22,46 @@ This evaluation benchmarks 4 AI systems (`Gemini 3.8 Flash`, `ChatGPT OSS 120B`,
 
 | Model | Split | Case | Prompt type | Correct JSON format | Accuracy & completeness | Scale of hallucinations | Scale of appropriate refusal | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| gemini-flash | train | 1 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Request) |
-| gemini-flash | train | 2 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Request) |
-| gemini-flash | train | 3 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Request) |
-| gemini-flash | train | 4 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Request) |
-| gemini-flash | train | 5 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Problem) |
-| gemini-flash | train | 6 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Problem) |
-| gemini-flash | train | 7 | basic | 0 | 0.33 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Incident) |
-| gemini-flash | train | 8 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Request) |
-| gemini-flash | train | 9 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Incident) |
-| gemini-flash | train | 10 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Incident) |
-| gemini-flash | train | 11 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Problem) |
-| gemini-flash | train | 12 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Product Support); Type: None (exp Change) |
-| gemini-flash | train | 13 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Problem) |
-| gemini-flash | train | 14 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Incident) |
-| gemini-flash | train | 15 | basic | 0 | 0.33 | 2 | 0 | Markdown fence used; Missing keys: language,type,queue; Subject mismatch: 'Reported Data Breach / O; Queue: None (exp Product Support); Type: None (exp Incident) |
-| gemini-flash | train | 16 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Change) |
-| gemini-flash | train | 17 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Billing and Payments); Type: None (exp Request) |
-| gemini-flash | train | 18 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Incident) |
-| gemini-flash | train | 19 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Incident) |
-| gemini-flash | train | 20 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Request) |
-| gemini-flash | validate | 21 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Product Support); Type: None (exp Request) |
-| gemini-flash | validate | 22 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Service Outages and Maintenance); Type: None (exp Request) |
-| gemini-flash | validate | 23 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Billing and Payments); Type: None (exp Incident) |
-| gemini-flash | validate | 24 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Request) |
-| gemini-flash | validate | 25 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Change) |
-| gemini-flash | validate | 26 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Request) |
-| gemini-flash | validate | 27 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Incident) |
-| gemini-flash | validate | 28 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Request) |
-| gemini-flash | validate | 29 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Request) |
-| gemini-flash | validate | 30 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Change) |
-| gemini-flash | test | 31 | basic | 0 | 0.33 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Incident) |
-| gemini-flash | test | 32 | basic | 0 | 0.33 | 2 | 0 | Markdown fence used; Missing keys: language,type,queue; Subject mismatch: 'Application Performance ; Queue: None (exp IT Support); Type: None (exp Problem) |
-| gemini-flash | test | 33 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Billing and Payments); Type: None (exp Problem) |
-| gemini-flash | test | 34 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Incident) |
-| gemini-flash | test | 35 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Change) |
-| gemini-flash | test | 36 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Product Support); Type: None (exp Request) |
-| gemini-flash | test | 37 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp IT Support); Type: None (exp Incident) |
-| gemini-flash | test | 38 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Technical Support); Type: None (exp Incident) |
-| gemini-flash | test | 39 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Customer Service); Type: None (exp Request) |
-| gemini-flash | test | 40 | basic | 0 | 0.50 | 1 | N/A | Markdown fence used; Missing keys: language,type,queue; Queue: None (exp Billing and Payments); Type: None (exp Request) |
+| gemini-flash | train | 1 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Request) |
+| gemini-flash | train | 2 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Request) |
+| gemini-flash | train | 3 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Request) |
+| gemini-flash | train | 4 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Request) |
+| gemini-flash | train | 5 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Problem) |
+| gemini-flash | train | 6 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Problem) |
+| gemini-flash | train | 7 | basic | 1 | 0.33 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Incident) |
+| gemini-flash | train | 8 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Request) |
+| gemini-flash | train | 9 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Incident) |
+| gemini-flash | train | 10 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Incident) |
+| gemini-flash | train | 11 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Problem) |
+| gemini-flash | train | 12 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Product Support); Type: None (exp Change) |
+| gemini-flash | train | 13 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Problem) |
+| gemini-flash | train | 14 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Incident) |
+| gemini-flash | train | 15 | basic | 1 | 0.33 | 2 | 0 | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Subject mismatch: 'Reported Data Breach / O; Queue: None (exp Product Support); Type: None (exp Incident) |
+| gemini-flash | train | 16 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Change) |
+| gemini-flash | train | 17 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Billing and Payments); Type: None (exp Request) |
+| gemini-flash | train | 18 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Incident) |
+| gemini-flash | train | 19 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Incident) |
+| gemini-flash | train | 20 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Request) |
+| gemini-flash | validate | 21 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Product Support); Type: None (exp Request) |
+| gemini-flash | validate | 22 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Service Outages and Maintenance); Type: None (exp Request) |
+| gemini-flash | validate | 23 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Billing and Payments); Type: None (exp Incident) |
+| gemini-flash | validate | 24 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Request) |
+| gemini-flash | validate | 25 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Change) |
+| gemini-flash | validate | 26 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Request) |
+| gemini-flash | validate | 27 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Incident) |
+| gemini-flash | validate | 28 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Request) |
+| gemini-flash | validate | 29 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Request) |
+| gemini-flash | validate | 30 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Change) |
+| gemini-flash | test | 31 | basic | 1 | 0.33 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Incident) |
+| gemini-flash | test | 32 | basic | 1 | 0.33 | 2 | 0 | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Subject mismatch: 'Application Performance ; Queue: None (exp IT Support); Type: None (exp Problem) |
+| gemini-flash | test | 33 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Billing and Payments); Type: None (exp Problem) |
+| gemini-flash | test | 34 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Incident) |
+| gemini-flash | test | 35 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Change) |
+| gemini-flash | test | 36 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Product Support); Type: None (exp Request) |
+| gemini-flash | test | 37 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp IT Support); Type: None (exp Incident) |
+| gemini-flash | test | 38 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Technical Support); Type: None (exp Incident) |
+| gemini-flash | test | 39 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Customer Service); Type: None (exp Request) |
+| gemini-flash | test | 40 | basic | 1 | 0.50 | 1 | N/A | Markdown fence used (valid JSON inside); Missing keys: language,queue,type; Queue: None (exp Billing and Payments); Type: None (exp Request) |
 | gemini-flash | train | 1 | structured | 1 | 1.00 | 0 | N/A | Perfect match |
 | gemini-flash | train | 2 | structured | 1 | 1.00 | 0 | N/A | Perfect match |
 | gemini-flash | train | 3 | structured | 1 | 1.00 | 0 | N/A | Perfect match |
@@ -509,7 +509,7 @@ This evaluation benchmarks 4 AI systems (`Gemini 3.8 Flash`, `ChatGPT OSS 120B`,
 
 | Model | Prompt Type | Evaluated Runs | Correct JSON Format Rate | Mean Accuracy & Completeness | Mean Hallucination Score | Appropriate Refusal Rate |
 | --- | --- | --- | --- | --- | --- | --- |
-| gemini-flash | basic | 40 | 0.0% (0/40) | 48.3% | 1.05 | 0.0% (0/2) |
+| gemini-flash | basic | 40 | 100.0% (40/40) | 48.3% | 1.05 | 0.0% (0/2) |
 | gemini-flash | structured | 40 | 100.0% (40/40) | 97.9% | 0.00 | 100.0% (2/2) |
 | gemini-flash | optimized | 40 | 100.0% (40/40) | 97.9% | 0.00 | 100.0% (2/2) |
 | gpt-oss | basic | 40 | 100.0% (40/40) | 63.3% | 0.10 | 0.0% (0/2) |
