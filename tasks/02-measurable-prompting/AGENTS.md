@@ -18,7 +18,7 @@ Create a total of **40 prompt bundles** and store them under `files/prompts`.
 
 ```
 files/prompts/
-├── chatgpt
+├── gpt-oss
 │   ├── train
 │   │   ├── 1
 │   │   │   ├── basic.md
@@ -55,9 +55,9 @@ files/prompts/
 │           └── optimized.md
 ├── gemini
 │   └── … (other model families)
-├── grok
+├── claude-sonnet
 │   └── …
-└── perplexity
+└── grok
     └── …
 ```
 
