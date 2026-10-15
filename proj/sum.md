@@ -217,3 +217,9 @@ A reproducible experiment and open-source codebase showing **when (if ever) spec
 ## Short proposal abstract
 
 > This project evaluates the effectiveness of single-agent and multi-agent large language model architectures for diagnosing incidents in Kubernetes environments. A controlled Kubernetes cluster will be monitored using Prometheus and Grafana, while reproducible failure scenarios will provide labeled diagnostic cases. An evidence collector will combine Kubernetes events, logs, workload status, and metrics into standardized incident snapshots. We will implement a basic single-agent baseline, an enhanced prompt-engineered single agent, and a multi-agent system with specialized metrics, logs, and diagnosis roles. All approaches will be evaluated on identical evidence using root-cause accuracy, quality of supporting evidence, response latency, and model usage. The project aims to determine whether multi-agent decomposition provides measurable benefits over simpler prompting strategies, rather than assuming that increased architectural complexity automatically improves results.
+
+## Prompt for Generation of the Environment
+
+Ideally take al the contents above and put it inside an AGENTS.md file.
+
+Additionally use [this prompt](./codex/prompt.md).
