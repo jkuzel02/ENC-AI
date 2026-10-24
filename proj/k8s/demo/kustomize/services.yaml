@@ -1,0 +1,26 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: foo-app
+  namespace: demo
+spec:
+  type: ClusterIP
+  selector:
+    app: foo-app
+  ports:
+    - port: 80
+      targetPort: 5678
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bar-app
+  namespace: demo
+spec:
+  type: ClusterIP
+  selector:
+    app: bar-app
+  ports:
+    - port: 80
+      targetPort: 5678
