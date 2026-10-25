@@ -62,14 +62,14 @@ helm upgrade --install flux-operator \
   --create-namespace \
   --wait
 
-# Install Flux instance
+# Install the FluxInstance resource; check operator-managed readiness below
+# Omit Helm's --wait so its custom-resource watcher does not own this check
 helm upgrade --install flux-instance \
   oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance \
   --kube-context "$context" \
   --version 0.61.0 \
   --namespace flux-system \
-  --set instance.cluster.size=small \
-  --wait
+  --set instance.cluster.size=small
 
 # Wait for the operator to finish installing the Flux controllers
 kubectl --context "$context" -n flux-system wait \
