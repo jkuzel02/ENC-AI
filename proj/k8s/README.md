@@ -11,48 +11,18 @@ We want to have installed the following set of tools, to be able to work with lo
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
 - [helm](https://helm.sh/docs/intro/install/)
 
-## Deploy the Example Cluster
+## Bootstrap
 
-Create the example cluster with kind:
+Run the bootstrap with the following command:
 
 ```bash
-kind create cluster --config kind/kind.yaml
+bash bootstrap.sh
 ```
 
-After creating a cluster, new context is going to be insterted into KUBECONFIG `~/.kube/config`.
+## Clean Up
 
-We need to install few other resources as well.
-
-### Install Flux CD
-
-To be able to work with [GitOps](https://about.gitlab.com/topics/gitops/) approach for Continuous Delivery, we'll use [Flux CD](https://fluxcd.io/).
-
-The most k8s-native (and actually the most easy-2-manage) is to use Flux Operator:
+Remove the cluster with the following command:
 
 ```bash
-helm upgrade --install flux-operator \
-  oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator \
-  --version 0.61.0 \
-  --namespace flux-system \
-  --create-namespace \
-  --wait
-```
-
-Then install Flux CD instance itself:
-
-```bash
-helm upgrade --install flux-instance \
-  oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance \
-  --version 0.61.0 \
-  --namespace flux-system \
-  --set instance.cluster.size=medium \
-  --wait
-```
-
-### Bootstrap the Rest
-
-Now let the Flux do the job for us with applying all that is inside `flux/`.
-
-```bash
-kubectl apply -f flux/
+kind delete cluster --name local
 ```

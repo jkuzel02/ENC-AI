@@ -1,0 +1,74 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kagent
+  namespace: flux-system
+spec:
+  maxHistory: 1
+
+  dependsOn:
+    - name: traefik
+    - name: kagent-crds
+
+  chart:
+    spec:
+      chart: kagent
+      sourceRef:
+        kind: HelmRepository
+        name: kagent
+      version: "0.10.3"
+  
+  releaseName: kagent
+  targetNamespace: kagent
+
+  interval: 10m
+  timeout: 3m
+
+  values:
+    providers:
+      default: openAI
+      openAI:
+        provider: OpenAI
+
+        config:
+          baseUrl: https://llm.ai.e-infra.cz/v1
+
+        # https://docs.cerit.io/en/docs/ai-as-a-service/chat-ai#generative-models
+        # https://llm.ai.e-infra.cz/status/
+        model: kimi-k3
+        
+        # export LLM_AI_EINFRA_API_KEY='sk-...'
+
+        # kubectl create secret generic llm-ai-einfra \
+        #   -n kagent \
+        #   --from-literal=API_KEY="${LLM_AI_EINFRA_API_KEY}"
+
+        apiKeySecretRef: llm-ai-einfra
+        apiKeySecretNamespace:
+        apiKeySecretKey: API_KEY
+        
+    ui:
+      httpRoute:
+        enabled: true
+        parentRefs:
+          - name: traefik-gateway
+            namespace: traefik
+            sectionName: websecure
+        hostnames:
+          - kagent.localhost
+        rules:
+          - backendRefs:
+              - kind: Service
+                name: kagent-ui
+                port: 8080
+
+    argo-rollouts-agent:
+      enabled: false
+    cilium-debug-agent:
+      enabled: false
+    cilium-manager-agent:
+      enabled: false
+    cilium-policy-agent:
+      enabled: false
+    istio-agent:
+      enabled: false

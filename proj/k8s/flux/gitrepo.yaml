@@ -1,0 +1,16 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: enc-ai
+  namespace: flux-system
+spec:
+  url: https://github.com/jkuzel02/ENC-AI
+  ref:
+    branch: main
+  
+  ignore: |
+    **
+    !/proj/k8s/flux/
+
+  interval: 1m
+  timeout: 30s

@@ -1,0 +1,26 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: localhost-wildcard-tls
+  namespace: cert-manager
+spec:
+  secretName: localhost-wildcard-tls
+
+  duration: 8760h # 365 days
+  renewBefore: 720h # 30 days
+
+  subject:
+    organizations:
+      - none
+
+  dnsNames:
+    - localhost
+    - "*.localhost"
+
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+
+  privateKey:
+    algorithm: ECDSA
+    size: 256

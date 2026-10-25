@@ -1,0 +1,20 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kagent
+  namespace: flux-system
+spec:
+  dependsOn:
+    - name: foundation
+    - name: gateway
+
+  sourceRef:
+    kind: GitRepository
+    name: enc-ai
+  path: ./proj/k8s/flux/infrastructure/controllers/kagent
+
+  prune: true
+  wait: true
+
+  interval: 10m
+  timeout: 3m
