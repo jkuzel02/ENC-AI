@@ -11,11 +11,7 @@ spec:
   hostnames:
     - foo.localhost
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
+    - backendRefs:
         - name: foo-app
           port: 80
 ---
@@ -32,10 +28,6 @@ spec:
   hostnames:
     - bar.localhost
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
+    - backendRefs:
         - name: bar-app
           port: 80
