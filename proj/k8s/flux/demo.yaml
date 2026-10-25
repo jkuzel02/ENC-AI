@@ -1,15 +1,3 @@
-
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: GitRepository
-metadata:
-  name: enc-ai
-  namespace: flux-system
-spec:
-  interval: 1m
-  url: https://github.com/jkuzel02/ENC-AI/
-  ref:
-    branch: main
----
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -19,7 +7,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: enc-ai
-  path: ./proj/k8s/demo/kustomize
+  path: ./proj/k8s/flux/demo
   targetNamespace: demo
   prune: true
   wait: true

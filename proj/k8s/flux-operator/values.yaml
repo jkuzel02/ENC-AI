@@ -1,9 +1,0 @@
-web:
-  httpRoute:
-    enabled: true
-    hostnames:
-      - flux.localhost
-    parentRefs:
-      - name: traefik-gateway
-        namespace: traefik
-        sectionName: websecure

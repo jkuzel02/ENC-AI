@@ -23,57 +23,6 @@ After creating a cluster, new context is going to be insterted into KUBECONFIG `
 
 We need to install few other resources as well.
 
-### Install cert-manager & Deploy Itself-managed Resources
-
-We want an automated TLS certificate management layer and [cert-manager](https://cert-manager.io/) can do just that.
-
-Install release:
-
-```bash
-helm install cert-manager \
-  oci://quay.io/jetstack/charts/cert-manager \
-  --version v1.21.3 \
-  --namespace cert-manager \
-  --create-namespace \
-  --set crds.enabled=true \
-  --wait
-```
-
-Deploy manifests:
-
-```bash
-kubectl apply -f cert-manager/
-```
-
-### Install GatewayAPI Resources
-
-To obtain [GatewayAPI](https://gateway-api.sigs.k8s.io/) resources run the following command:
-
-```bash
-kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
-```
-
-### Install Traefik
-
-To actually use GatewayAPI for cluster traffic ingress, let's install [Traefik](https://traefik.io/solutions/gateway-api):
-
-```bash
-helm upgrade --install traefik traefik \
-  --repo https://traefik.github.io/charts \
-  --version 42.1.3 \
-  --namespace traefik \
-  --create-namespace \
-  --values traefik/values.yaml \
-  --wait
-```
-
-And we have to manually set the HTTP to HTTPS redirect as well as to allow the TLS Secret inter-namespace-reference:
-
-```bash
-kubectl apply -f traefik/http-2-https.yaml
-kubectl apply -f traefik/allow-traefik-tls.yaml
-```
-
 ### Install Flux CD
 
 To be able to work with [GitOps](https://about.gitlab.com/topics/gitops/) approach for Continuous Delivery, we'll use [Flux CD](https://fluxcd.io/).
@@ -86,7 +35,6 @@ helm upgrade --install flux-operator \
   --version 0.61.0 \
   --namespace flux-system \
   --create-namespace \
-  --values flux-operator/values.yaml \
   --wait
 ```
 
@@ -101,8 +49,10 @@ helm upgrade --install flux-instance \
   --wait
 ```
 
-### Demo GitRepository & Kustomization
+### Bootstrap the Rest
+
+Now let the Flux do the job for us with applying all that is inside `flux/`.
 
 ```bash
-kubectl apply -f demo/
+kubectl apply -f flux/
 ```
