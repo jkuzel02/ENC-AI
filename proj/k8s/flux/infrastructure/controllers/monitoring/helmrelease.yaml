@@ -1,0 +1,23 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: monitoring
+  namespace: flux-system
+spec:
+  maxHistory: 1
+
+  dependsOn:
+    - name: traefik
+
+  chartRef:
+    kind: OCIRepository
+    name: kube-prometheus-stack
+  
+  releaseName: monitoring
+  targetNamespace: monitoring
+
+  interval: 10m
+  timeout: 3m
+
+  # values:
+    

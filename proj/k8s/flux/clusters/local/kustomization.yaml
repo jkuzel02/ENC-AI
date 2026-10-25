@@ -6,6 +6,7 @@ resources:
   - certificates.yaml
   - traefik.yaml
   - gateway.yaml
+  - flux.yaml
+  - monitoring.yaml
   - kagent.yaml
   - demo.yaml
-  - flux.yaml
