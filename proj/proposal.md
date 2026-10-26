@@ -1,33 +1,77 @@
-# Proposal pro projekt ENC-AI
+# Proposal pro semestrální projekt
 
-Proposal na projekt do předmětu Umělá inteligence (ENC-AI) - Využití Multi-Agent AI systémů pro diagnostiku a RCA (Root Cause Analysis) v Kubernetes prostředí
+Návrh projektu do předmětu **Umělá inteligence (ENC-AI)**
+
+**Téma projektu:** Využití Multi-Agent AI systémů pro diagnostiku a RCA v Kubernetes
+
+Projekt porovnává jednoagentní a multiagentní systémy umělé inteligence při diagnostice a analýze kořenových příčin provozních incidentů (Root Cause Analysis, RCA) v prostředí Kubernetes.
+
+## Řešitelé
+
+* [Dominik Jakubec](https://is.mendelu.cz/auth/lide/clovek.pl?id=100907)
+* [Jiří Kužel](https://is.mendelu.cz/auth/lide/clovek.pl?id=100910)
+* [Vojtěch Střílka](https://is.mendelu.cz/auth/lide/clovek.pl?id=100912)
+* [Jiří Ulč](https://is.mendelu.cz/auth/lide/clovek.pl?id=101482)
 
 ## Základní princip
 
 **1. Kdo má daný problém?**
 
-DevOps inženýři, administrátoři Kubernetes clusterů a SRE týmy, které zajišťují provoz a dostupnost kontejnerizovaných aplikací.
+* vývojáři aplikací
+* DevOps inženýři
+* správci Kubernetes clusterů
+* SRE (Site Reliability Engineering) týmy
+
+Obecně všichni, kdo zajišťují vývoj a provoz softwaru.
 
 **2. S čím se potýká?**
 
-Při řešení incidentů musí vyhodnocovat velké množství informací z logů, metrik a Kubernetes událostí. Tyto informace jsou často rozděleny mezi několik nástrojů a určit skutečnou příčinu problému nemusí být jednoduché.
+Při řešení incidentů musí uživatel/správce vyhodnocovat velké množství informací z událostí, logů nebo metrik.
+
+Tyto informace jsou často rozptýleny v několika systémech a pro určení skutečné příčiny problému nemusí existovat jednotný postup.
 
 **3. Proč na tom záleží?**
 
-Zdlouhavá diagnostika prodlužuje dobu výpadku služeb, zvyšuje provozní náklady a může negativně ovlivnit jejich uživatele. Automatizovaná analýza by mohla zrychlit identifikaci problémů a pomoci i méně zkušeným administrátorům.
+Zdlouhavá diagnostika prodlužuje dobu výpadku služeb, zvyšuje provozní náklady a může negativně ovlivnit jejich uživatele.
+
+Automatizovaná analýza může urychlit identifikaci příčin problémů a pomoci i méně zkušeným uživatelům/správcům.
 
 **4. Jaké je nejmenší řešení, které můžeme otestovat?**
 
-Prototyp, který získá metriky, logy a události z testovacího Kubernetes clusteru a pomocí LLM vytvoří diagnózu incidentu. Na stejných datech porovnáme jednoagentní a multiagentní přístup.
+Prototyp, který získá metriky, logy a události z lokálního Kubernetes clusteru s aplikacemi, v nichž budeme simulovat provozní incidenty.
+
+Porovnáním různých architektur AI systémů posoudíme jejich diagnostickou úspěšnost a provozní náročnost.
+
+Na stejných datech porovnáme jednoagentní přístup se základním a optimalizovaným promptem a multiagentní přístup.
 
 **5. Jaké důkazy nám řeknou, zda to funguje?**
 
-Připravíme sadu incidentů se známou příčinou (například OOMKilled, CrashLoopBackOff nebo CPU throttling). Na těchto scénářích budeme měřit úspěšnost identifikace příčiny, správnost použitých důkazů, dobu analýzy a spotřebu tokenů. Výsledky ukážou, zda multiagentní řešení dosahuje lepších výsledků a zda případné zlepšení ospravedlňuje jeho vyšší složitost.
+Připravíme sadu incidentů se známou příčinou jako například překročení paměťového limitu, chybnou konfiguraci aplikace nebo příliš nízký limit CPU.
+
+Na takových scénářích budeme měřit:
+
+* úspěšnost identifikace příčiny
+* správnost použitých důkazů
+* dodržení očekávané struktury odpovědi
+* dobu analýzy
+* spotřebu tokenů
+
+Výsledky ukážou, který přístup dosahuje lepších výsledků a zda přínos složitější architektury vyvažuje náročnost její konfigurace.
 
 ## Project pitch
 
-Projekt umožní prakticky prozkoumat využití pokročilého prompt engineeringu a multiagentních AI architektur při řešení reálných problémů v oblasti IT infrastruktury. Jeho hlavním přínosem bude nejen funkční prototyp diagnostického nástroje, ale především experimentální porovnání několika AI přístupů za stejných podmínek.
+Projekt umožní prakticky prozkoumat využití pokročilého prompt engineeringu a multiagentních AI architektur při řešení reálných problémů v oblasti IT infrastruktury.
+
+Jeho hlavním přínosem bude nejen funkční prototyp diagnostického nástroje, ale především experimentální porovnání několika AI přístupů za stejných podmínek ve stejném prostředí.
 
 ## Product pitch
 
-Nástroj je určen správcům Kubernetes infrastruktury, kterým pomůže rychleji porozumět provozním incidentům. Namísto ručního procházení různých diagnostických zdrojů získají přehled pravděpodobných příčin problému, relevantních důkazů a doporučených kroků k nápravě. Navržené řešení má sloužit jako podpora rozhodování, nikoliv jako náhrada zkušeného administrátora.
+Nástroj je určen správcům Kubernetes infrastruktury, kterým pomůže rychleji porozumět provozním incidentům.
+
+Namísto ručního procházení různých diagnostických zdrojů uživatelé nástroje získají:
+
+* přehled pravděpodobných příčin problému
+* relevantní důkazy
+* doporučené kroky k nápravě problému
+
+Navržené řešení má sloužit jako systém pro podporu rozhodování, nikoliv jako náhrada zkušeného uživatele/správce.
