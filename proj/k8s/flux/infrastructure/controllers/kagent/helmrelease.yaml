@@ -35,7 +35,7 @@ spec:
 
         # https://docs.cerit.io/en/docs/ai-as-a-service/chat-ai#generative-models
         # https://llm.ai.e-infra.cz/status/
-        model: kimi-k3
+        model: deepseek-v4.1-flash
         
         # export LLM_AI_EINFRA_API_KEY='sk-...'
 
@@ -46,6 +46,11 @@ spec:
         apiKeySecretRef: llm-ai-einfra
         apiKeySecretNamespace:
         apiKeySecretKey: API_KEY
+
+    grafana-mcp:
+      enabled: true
+      grafana:
+        url: "http://monitoring-grafana.monitoring.svc.cluster.local"
         
     ui:
       httpRoute:
@@ -69,6 +74,8 @@ spec:
     cilium-manager-agent:
       enabled: false
     cilium-policy-agent:
+      enabled: false
+    kgateway-agent:
       enabled: false
     istio-agent:
       enabled: false
