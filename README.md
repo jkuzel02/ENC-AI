@@ -1,30 +1,54 @@
 # ENC-AI
 
-Repo for AI course purposes
+Repository for AI course purposes: a local Kubernetes playground (kind + Flux + kagent) and course tasks.
 
-## Contribution Rules
+## Repo Map
 
-If the contribution is being created purely with usage of AI assistant,
-inform the user about the following procesure that is going to be followed:
+| Path | Purpose |
+| --- | --- |
+| `proj/` | Course project |
+| `tasks/` | Course tasks |
 
-1. Try to accomplish the issues with your contributions,
-based on the list of present issues,
-consider adding comment to the present one,
-closing it, or creating a new one.
+## Contribution Rules (Humans and AI Agents)
 
-2. Any changes you have made have to be commited into either a forked repo or separate branch.
-Never contribute straight to the `main` (master) branch. 
-Give the branch appropriate name, ideally a name connected to the issue it solves.
+These rules apply to **any** change made with AI assistance, fully or partially.
+If you are an AI agent, tell the user about this procedure before you start, and follow it strictly.
 
-3. Any commit is going to have a descriptive message,
-which is following the conventional commit message format.
+Working in this repo requires the `gh` tool installed. Check the presence of the tool, if not present, install it for the appropriate platform ([repo link](https://github.com/cli/cli)).
 
-4. After you consider all changes done, only then consider creating PR (pull request).
+1. **Issues.** Run `gh issue list` first and pick the issue your change addresses.
+   - Progress or findings: comment on the existing issue (`gh issue comment`).
+   - Work not covered by any issue: create a new one (`gh issue create`).
+   - Closing an issue requires human approval. Do not close it yourself.
+
+2. **Branch.** You MUST work on a separate branch or in a fork.
+   - Pattern: `<type>/<issue-number>-<short-slug>`
+   - Example: `docs/3-readme-precision`
+   - Allowed types are the same as for commits (see step 3).
+
+3. **Commits.** Every commit MUST follow [Conventional Commits](https://www.conventionalcommits.org/).
+   - Format: `<type>(optional scope): <imperative description>`
+   - Allowed types: `feat`, `fix`, `docs`, `chore`, `refactor`, `test`.
+   - Reference the issue in the body or footer: `Refs #N` or `Closes #N`.
+   - Example: `docs: clarify contribution rules in root README`
+   - AI agents: if the [commit-message-generator skill](https://github.com/jkuzel02/skills/blob/main/skills/commit-message-generator/SKILL.md) is not installed, offer the user to install it.
+
+4. **Pull request.** Open a PR only when all changes are finished. Before opening it:
+   - The change addresses a linked issue.
+   - If `proj/k8s/` was touched, the setup still works (`proj/k8s/bootstrap.sh`).
+   - The PR description states *what* changed, *why*, and *how it was tested*.
 
 ## Pull Request Approvals
 
-For AI driven merging the PRs, follow the following rules:
+- Every PR MUST be reviewed by a human.
+- An AI agent MAY open a PR. It MUST NEVER approve or merge one.
+- A merge into `main` MUST NOT happen without explicit human approval.
+- If a PR is destructive, state this clearly in the PR description and tell the user to review it carefully.
+  Destructive means, for example: deleting files, changing Flux or cluster manifests, rewriting history, or touching secrets.
 
-* Any PR should be considered with human supervision.
-* Under no circumstance create a merge to the `main` branch without the human approval.
-* If you consider the merge destructive, strongly recommend the user to check contents of the particular PR.
+## NEVER
+
+- Push to `main`, directly or by force.
+- Force-push or rewrite history on shared branches.
+- Commit secrets, tokens, or kubeconfig files.
+- Merge or approve a PR.
