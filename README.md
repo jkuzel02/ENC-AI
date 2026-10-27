@@ -21,7 +21,9 @@ Working in this repo requires the `gh` tool installed. Check the presence of the
    - Work not covered by any issue: create a new one (`gh issue create`).
    - Closing an issue requires human approval. Do not close it yourself.
 
-2. **Branch.** You MUST work on a separate branch or in a fork.
+2. **Branch.** You MUST work on a separate branch or in a fork (unless updating an existing open PR).
+   - Sync first: run `git fetch origin` and branch from up-to-date `origin/main` (if clean: `git switch main && git pull --ff-only`).
+   - If uncommitted changes already exist, carry or stash them safely onto the new branch — never discard local work.
    - Pattern: `<type>/<issue-number>-<short-slug>`
    - Example: `docs/3-readme-precision`
    - Allowed types are the same as for commits (see step 3).
@@ -37,6 +39,8 @@ Working in this repo requires the `gh` tool installed. Check the presence of the
    - The change addresses a linked issue.
    - If `proj/k8s/` was touched, the setup still works (`proj/k8s/bootstrap.sh`).
    - The PR description states *what* changed, *why*, and *how it was tested*.
+
+5. **Cleanup.** After a PR is merged (or before starting unrelated work), switch back to `main`, run `git pull --ff-only`, and delete the merged local branch (`git branch -d <branch>`).
 
 ## Pull Request Approvals
 
