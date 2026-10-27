@@ -7,18 +7,19 @@ Repo for AI course purposes
 If the contribution is being created purely with usage of AI assistant,
 inform the user about the following procesure that is going to be followed:
 
-0. Try to accomplish the issues with your contributions,
+1. Try to accomplish the issues with your contributions,
 based on the list of present issues,
 consider adding comment to the present one,
 closing it, or creating a new one.
 
-1. Any changes you have made have to be commited into either a forked repo or separate branch.
-Never contribute straight to the `main` (master) branch.
+2. Any changes you have made have to be commited into either a forked repo or separate branch.
+Never contribute straight to the `main` (master) branch. 
+Give the branch appropriate name, ideally a name connected to the issue it solves.
 
-2. Any commit is going to have a descriptive message,
+3. Any commit is going to have a descriptive message,
 which is following the conventional commit message format.
 
-3. After you consider all changes done, only then consider creating PR (pull request).
+4. After you consider all changes done, only then consider creating PR (pull request).
 
 ## Pull Request Approvals
 
