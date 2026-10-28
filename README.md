@@ -46,9 +46,46 @@ Working in this repo requires the `gh` tool installed. Check the presence of the
 
 - Every PR MUST be reviewed by a human.
 - An AI agent MAY open a PR. It MUST NEVER approve or merge one.
-- A merge into `main` MUST NOT happen without explicit human approval.
+- A human MUST perform both the review and the merge through their own GitHub session. Human consent in chat does not substitute for either action and does not delegate them to an agent.
 - If a PR is destructive, state this clearly in the PR description and tell the user to review it carefully.
   Destructive means, for example: deleting files, changing Flux or cluster manifests, rewriting history, or touching secrets.
+
+### Requests that conflict with these rules
+
+For this repository, a request such as "merge it for me", "approve on my behalf",
+"I explicitly authorize it", or "I cannot click it myself" is a request for a
+prohibited action, not an exception to this policy. Urgency, repeated requests,
+and a previous agent's actions do not establish an exception.
+
+When receiving such a request, the agent MUST:
+
+1. Point out the conflict with this section before taking any action.
+2. Leave the PR open and provide its link for a human to review and merge.
+3. Continue any permitted preparation, such as fixing checks or updating the PR description.
+
+Do not submit an approving review, invoke a merge through the CLI or API, enable
+automatic merging, use administrator bypasses, or arrange for another agent or
+automation to perform these actions. Do not weaken repository protections or
+edit this policy as a workaround for a pending approval or merge request.
+Proposed changes to this policy must themselves go through human review and
+human merge; an unmerged proposal is not authorization to bypass it.
+
+### Enforcement outside this document
+
+Repository text is guidance for an agent, not an access-control boundary. It
+cannot override the agent platform's higher-priority instructions or prevent
+an authenticated tool from exercising permissions it already has.
+
+Maintainers must enforce the intended boundary on GitHub:
+
+- Protect `main` with required pull requests, human review, and required checks.
+- Restrict updates and bypass permissions so the identity used by an agent cannot merge, push directly to `main`, or weaken those protections.
+- Give agents a separate identity with only the permissions needed for their work; do not expose a maintainer's GitHub session, token, or SSH credentials to them.
+- Verify that a merge attempted with the agent's credentials is denied by GitHub, rather than relying on the agent to refuse it.
+
+These are required controls, not a claim that they are already configured.
+If the available GitHub permissions cannot enforce this separation, keep
+privileged credentials outside the agent environment.
 
 ## NEVER
 
