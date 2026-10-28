@@ -7,6 +7,7 @@ Repository for AI course purposes: a local Kubernetes playground (kind + Flux + 
 | Path | Purpose |
 | --- | --- |
 | `proj/` | Course project |
+| `proj/k8s/` | Local Kubernetes cluster setup (macOS & WSL2) |
 | `tasks/` | Course tasks |
 
 ## Contribution Rules (Humans and AI Agents)
