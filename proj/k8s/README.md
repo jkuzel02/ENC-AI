@@ -1,12 +1,86 @@
-# Local Kubernetes Cluster for WSL2 Development
+# Local Kubernetes Cluster Development
 
-This guide covers local development in **Ubuntu inside WSL2**, using
-[kind](https://kind.sigs.k8s.io/) (**K**ubernetes **in** **D**ocker).
+This guide covers local development of the Kubernetes cluster using
+[kind](https://kind.sigs.k8s.io/) (**K**ubernetes **in** **D**ocker) on both
+**macOS** and **Ubuntu inside WSL2**.
+
+The cluster runs Flux CD for GitOps reconciliation, Traefik Gateway for routing
+`*.localhost` subdomains over HTTPS, Prometheus and Grafana for monitoring, and
+Kagent (multi-agent AI for Kubernetes) with Grafana MCP integration.
+
+Follow the setup section for your operating system:
+- [macOS Setup](#macos-setup)
+- [WSL2 (Ubuntu) Setup](#wsl2-ubuntu-setup)
+
+Then proceed to the common steps:
+- [Prepare the API Key](#prepare-the-api-key)
+- [Bootstrap](#bootstrap)
+- [Access Web Services & Applications](#access-web-services--applications)
+- [Verify Readiness](#verify-readiness)
+- [Suspending and Resuming (Save Resources)](#suspending-and-resuming-save-resources)
+- [Clean Up](#clean-up)
+
+---
+
+## macOS Setup
+
+### Requirements
+
+On macOS, install the required development tools via [Homebrew](https://brew.sh/)
+and use [Docker Desktop for Mac](https://docs.docker.com/desktop/setup/install/mac-install/)
+(or [OrbStack](https://orbstack.dev/)).
+
+1. **Install tools via Homebrew:**
+
+   ```bash
+   brew install kind kubectl helm
+   ```
+
+2. **Start Docker Desktop:**
+   Launch Docker Desktop from `/Applications` or via the terminal:
+
+   ```bash
+   open -a Docker
+   ```
+
+3. **Verify the tools and Docker daemon:**
+
+   ```bash
+   docker --version
+   kind version
+   kubectl version --client
+   helm version --short
+   ```
+
+   Before bootstrapping, the Docker daemon must be running and responsive without
+   elevated privileges:
+
+   ```bash
+   docker info
+   ```
+
+### macOS Networking & Port Availability
+
+- The kind cluster binds host ports `80` and `443` on `127.0.0.1`. Ensure no
+  other local web server (e.g. Apache, Nginx, Caddy) is currently listening on
+  these ports:
+  ```bash
+  lsof -iTCP:80,443 -sTCP:LISTEN
+  ```
+- Domains ending in `*.localhost` (such as `kagent.localhost` and `grafana.localhost`)
+  resolve automatically to `127.0.0.1` on macOS according to RFC 6761 without
+  modifying `/etc/hosts`.
+
+---
+
+## WSL2 (Ubuntu) Setup
+
+This section covers local development in **Ubuntu inside WSL2**.
 Run the commands in a WSL Bash terminal, including when using VS Code connected
 to WSL. The manual Docker steps below assume Docker Engine runs inside that WSL
 distribution; they do not describe Docker Desktop integration or production use.
 
-## Requirements
+### Requirements
 
 Install these tools inside WSL:
 
@@ -48,9 +122,9 @@ succeed **without sudo**:
 docker info
 ```
 
-## Start Docker Inside WSL
+### Start Docker Inside WSL
 
-### Docker installed as a systemd service
+#### Docker installed as a systemd service
 
 If your installation provides `docker.service` and WSL has systemd enabled:
 
@@ -62,7 +136,7 @@ sudo systemctl status docker
 See Microsoft's [WSL systemd guide](https://learn.microsoft.com/en-us/windows/wsl/systemd)
 if systemd is unavailable. Enabling systemd does not install Docker's service.
 
-### Standalone binaries without docker.service
+#### Standalone binaries without docker.service
 
 `Unit docker.service not found` means the service is missing. This can happen
 when Docker was installed as standalone binaries in `~/.local/bin`.
@@ -100,7 +174,7 @@ for the following commands. Pressing Ctrl+C in terminal 1 stops Docker; closing
 the terminal can also stop it. A WSL shutdown stops the daemon and cluster.
 Restart Docker before using the cluster again.
 
-### Docker socket permissions
+#### Docker socket permissions
 
 If `docker info` reports `permission denied` for `/var/run/docker.sock`, the
 daemon is running but your user lacks access. For the manually started daemon
@@ -123,6 +197,8 @@ If the socket is missing (`No such file or directory` or `cannot dereference`),
 first check terminal 1: the daemon may have stopped or failed to start. Start it
 and wait for the API message before changing socket permissions. Do not create
 the socket manually.
+
+---
 
 ## Prepare the API Key
 
@@ -167,6 +243,8 @@ A missing or invalid `.env` stops the script before cluster creation or Helm
 installation. `.env` is ignored by Git; never commit keys, copies of secret
 files, or kubeconfig files.
 
+---
+
 ## Bootstrap
 
 From the repository root:
@@ -193,7 +271,39 @@ Local manifest edits are not automatically deployed. A successful bootstrap
 does not mean every application is ready: Flux continues installing applications
 in dependency order afterward.
 
-### Verify readiness
+---
+
+## Access Web Services & Applications
+
+Traefik Gateway exposes services through TLS on port 443 with automatic redirection
+from HTTP port 80. Certificates are issued by cert-manager using a local cluster
+CA for `*.localhost`.
+
+| Service | URL | Notes & Credentials |
+| --- | --- | --- |
+| **Kagent UI** | `https://kagent.localhost` | Web UI for the Kagent multi-agent AI system |
+| **Grafana** | `https://grafana.localhost` | Cluster metrics & dashboards. User: `admin` |
+| **Flux Dashboard** | `https://flux.localhost` | GitOps reconciliation status and controls |
+| **Demo Apps** | `https://foo.localhost`<br>`https://bar.localhost` | Sample applications routing to demo deployments |
+
+### Retrieve Grafana Admin Password
+
+To retrieve the generated password for user `admin` in Grafana:
+
+```bash
+kubectl --context kind-local -n monitoring get secret monitoring-grafana -o jsonpath="{.data.admin-password}" | base64 --decode && echo ""
+```
+
+### Self-Signed Certificate Warning
+
+Because certificates are issued by an in-cluster self-signed issuer, browsers
+(Chrome, Safari, Edge) will show an `Untrusted Certificate` or `Not Secure` warning
+on the first visit. Click **Advanced** and select **Proceed to localhost (unsafe)**
+to open the web interface.
+
+---
+
+## Verify Readiness
 
 ```bash
 kubectl --context kind-local get nodes
@@ -214,13 +324,36 @@ kubectl --context kind-local -n flux-system describe kustomization foundation
 After fixing a prerequisite, rerun `bash proj/k8s/bootstrap.sh` from the
 repository root; it reuses the existing cluster.
 
+---
+
+## Suspending and Resuming (Save Resources)
+
+When not actively developing, you can put the cluster to sleep without losing any
+state, downloaded container images, or certificates:
+
+1. **Pause / Stop the cluster container:**
+   ```bash
+   docker stop local-control-plane
+   ```
+2. **Quit Docker Desktop:**
+   This frees up all RAM and CPU allocated to Docker on your machine.
+
+3. **Resume later:**
+   Start Docker Desktop and run:
+   ```bash
+   docker start local-control-plane
+   ```
+   All pods and web interfaces will be back up and running within 15–30 seconds.
+
+---
+
 ## Clean Up
 
-With Docker still running, remove the local cluster:
+With Docker still running, permanently remove the local cluster:
 
 ```bash
 kind delete cluster --name local
 ```
 
-For the manually started Docker daemon, stop it with Ctrl+C in terminal 1
+For the manually started Docker daemon in WSL, stop it with Ctrl+C in terminal 1
 when you no longer need it.
