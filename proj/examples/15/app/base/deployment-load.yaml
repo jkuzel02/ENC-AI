@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: load
+  template:
+    metadata:
+      labels:
+        app: load
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: web
+        image: python:3.12.8-slim
+        imagePullPolicy: IfNotPresent
+        command:
+        - python
+        - -u
+        - /app/load.py
+        env:
+        - name: TARGET_URL
+          value: http://api
+        - name: REQUESTS_PER_SECOND
+          value: '2'
+        resources:
+          requests:
+            cpu: 25m
+            memory: 32Mi
+          limits:
+            cpu: 250m
+            memory: 128Mi
+        volumeMounts:
+        - name: code
+          mountPath: /app
+          readOnly: true
+      volumes:
+      - name: code
+        configMap:
+          name: code

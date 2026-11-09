@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      terminationGracePeriodSeconds: 1
+      containers:
+      - name: web
+        image: python:3.12.8-slim
+        imagePullPolicy: IfNotPresent
+        command:
+        - python
+        - -u
+        - /app/server.py
+        resources:
+          requests:
+            cpu: 25m
+            memory: 32Mi
+          limits:
+            cpu: 1000m
+            memory: 256Mi
+        volumeMounts:
+        - name: code
+          mountPath: /app
+          readOnly: true
+        ports:
+        - name: http
+          containerPort: 8080
+        env:
+        - name: CPU_ITERATIONS
+          value: '500000'
+        readinessProbe:
+          tcpSocket:
+            port: http
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 12
+      volumes:
+      - name: code
+        configMap:
+          name: code

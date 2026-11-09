@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rca-14
+resources:
+- namespace-rca-14.yaml
+- deployment-api.yaml
+- serviceaccount-controller.yaml
+- configmap-settings.yaml
+- role-config-reader.yaml
+- rolebinding-config-reader.yaml
+configMapGenerator:
+- name: code
+  files:
+  - controller.py
+generatorOptions:
+  disableNameSuffixHash: true

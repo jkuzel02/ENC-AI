@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  template:
+    spec:
+      containers:
+      - name: web
+        resources:
+          requests:
+            cpu: '1000'
+          limits:
+            cpu: '1000'

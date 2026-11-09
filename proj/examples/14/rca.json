@@ -1,0 +1,168 @@
+{
+  "context": {
+    "incident": "The controller process runs but fails to list namespace configuration and cannot complete reconciliation.",
+    "time_window": null,
+    "resources": [
+      {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "metadata": {
+          "name": "rca-14"
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "ServiceAccount",
+        "metadata": {
+          "name": "controller",
+          "namespace": "rca-14"
+        }
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "Role",
+        "metadata": {
+          "name": "config-reader",
+          "namespace": "rca-14"
+        },
+        "rules": [
+          {
+            "apiGroups": [
+              ""
+            ],
+            "resources": [
+              "configmaps"
+            ],
+            "verbs": [
+              "get"
+            ]
+          }
+        ]
+      },
+      {
+        "apiVersion": "rbac.authorization.k8s.io/v1",
+        "kind": "RoleBinding",
+        "metadata": {
+          "name": "config-reader",
+          "namespace": "rca-14"
+        },
+        "roleRef": {
+          "apiGroup": "rbac.authorization.k8s.io",
+          "kind": "Role",
+          "name": "config-reader"
+        },
+        "subjects": [
+          {
+            "kind": "ServiceAccount",
+            "name": "controller",
+            "namespace": "rca-14"
+          }
+        ]
+      },
+      {
+        "apiVersion": "v1",
+        "data": {
+          "controller.py": "import json\nimport os\nimport ssl\nimport time\nimport urllib.error\nimport urllib.request\nfrom pathlib import Path\n\naccount = Path(\"/var/run/secrets/kubernetes.io/serviceaccount\")\nnamespace = account.joinpath(\"namespace\").read_text().strip()\ntoken = account.joinpath(\"token\").read_text().strip()\ncontext = ssl.create_default_context(cafile=str(account / \"ca.crt\"))\nhost = os.environ[\"KUBERNETES_SERVICE_HOST\"]\nif \":\" in host:\n    host = \"[\" + host + \"]\"\nbase = \"https://\" + host + \":\" + os.environ[\"KUBERNETES_SERVICE_PORT_HTTPS\"]\npath = \"/api/v1/namespaces/\" + namespace + \"/configmaps\"\nwhile True:\n    for action, suffix in ((\"get\", \"/settings\"), (\"list\", \"\")):\n        request = urllib.request.Request(base + path + suffix, headers={\"Authorization\": \"Bearer \" + token})\n        try:\n            with urllib.request.urlopen(request, context=context, timeout=5) as response:\n                body = json.load(response)\n                print(json.dumps({\"action\": action, \"status\": response.status, \"reconciled\": action == \"list\", \"timestamp\": time.time()}), flush=True)\n        except urllib.error.HTTPError as error:\n            print(json.dumps({\"action\": action, \"status\": error.code, \"error\": error.read().decode(), \"timestamp\": time.time()}), flush=True)\n        except (urllib.error.URLError, TimeoutError, OSError) as error:\n            print(json.dumps({\"action\": action, \"error\": str(error), \"timestamp\": time.time()}), flush=True)\n    time.sleep(5)\n"
+        },
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "code",
+          "namespace": "rca-14"
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "data": {
+          "APP_MODE": "production"
+        },
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "settings",
+          "namespace": "rca-14"
+        }
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "api",
+          "namespace": "rca-14"
+        },
+        "spec": {
+          "replicas": 1,
+          "selector": {
+            "matchLabels": {
+              "app": "api"
+            }
+          },
+          "strategy": {
+            "type": "Recreate"
+          },
+          "template": {
+            "metadata": {
+              "labels": {
+                "app": "api"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "command": [
+                    "python",
+                    "-u",
+                    "/app/controller.py"
+                  ],
+                  "image": "python:3.12.8-slim",
+                  "imagePullPolicy": "IfNotPresent",
+                  "name": "web",
+                  "resources": {
+                    "limits": {
+                      "cpu": "500m",
+                      "memory": "128Mi"
+                    },
+                    "requests": {
+                      "cpu": "25m",
+                      "memory": "32Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "mountPath": "/app",
+                      "name": "code",
+                      "readOnly": true
+                    }
+                  ]
+                }
+              ],
+              "serviceAccountName": "controller",
+              "terminationGracePeriodSeconds": 1,
+              "volumes": [
+                {
+                  "configMap": {
+                    "name": "code"
+                  },
+                  "name": "code"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "events": [],
+    "logs": [],
+    "metrics": [],
+    "checks": []
+  },
+  "root-cause": {
+    "cause": "Role/config-reader permits get but omits list on ConfigMaps for ServiceAccount/controller.",
+    "causal_chain": "The API server authenticates the ServiceAccount, but RBAC denies its list request with HTTP 403, preventing reconciliation.",
+    "supporting_evidence": [
+      "Deployment/api uses ServiceAccount/controller and RoleBinding/config-reader binds it to Role/config-reader.",
+      "The Role verbs include get but not list for core ConfigMaps.",
+      "Controller logs show get=200 and list=403 Forbidden identifying the ServiceAccount; authorization checks agree."
+    ],
+    "remediation": "Restore the namespace-scoped list permission in Role/config-reader using app/.",
+    "recovery_check": "The same ServiceAccount can list ConfigMaps and controller logs show successful reconciliation without granting cluster-admin."
+  }
+}

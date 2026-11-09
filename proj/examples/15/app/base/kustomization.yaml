@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rca-15
+resources:
+- namespace-rca-15.yaml
+- deployment-api.yaml
+- service-api.yaml
+- deployment-backend.yaml
+- service-backend.yaml
+- deployment-load.yaml
+configMapGenerator:
+- name: code
+  files:
+  - load.py
+  - server.py
+generatorOptions:
+  disableNameSuffixHash: true

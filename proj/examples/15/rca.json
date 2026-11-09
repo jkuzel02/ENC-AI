@@ -1,0 +1,332 @@
+{
+  "context": {
+    "incident": "Users receive HTTP 502 errors from the frontend during repeated backend interruptions.",
+    "time_window": null,
+    "resources": [
+      {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "metadata": {
+          "name": "rca-15"
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "data": {
+          "load.py": "import concurrent.futures\nimport json\nimport os\nimport threading\nimport time\nimport urllib.error\nimport urllib.request\n\nurl = os.environ.get(\"TARGET_URL\", \"http://api\")\nrate = float(os.environ.get(\"REQUESTS_PER_SECOND\", \"4\"))\nslots = threading.BoundedSemaphore(16)\n\ndef request():\n    start = time.monotonic()\n    status = None\n    error = None\n    try:\n        with urllib.request.urlopen(url, timeout=10) as response:\n            response.read()\n            status = response.status\n    except urllib.error.HTTPError as exc:\n        status, error = exc.code, str(exc)\n    except (urllib.error.URLError, TimeoutError, OSError) as exc:\n        error = str(exc)\n    finally:\n        print(json.dumps({\"timestamp\": time.time(), \"status\": status, \"latency_seconds\": time.monotonic() - start, \"error\": error}), flush=True)\n        slots.release()\n\nwith concurrent.futures.ThreadPoolExecutor(max_workers=16) as pool:\n    deadline = time.monotonic()\n    while True:\n        if slots.acquire(blocking=False):\n            pool.submit(request)\n        else:\n            print(json.dumps({\"timestamp\": time.time(), \"event\": \"load_generator_saturated\"}), flush=True)\n        deadline += 1 / rate\n        time.sleep(max(0, deadline - time.monotonic()))\n",
+          "server.py": "import hashlib\nimport json\nimport os\nimport threading\nimport time\nimport urllib.error\nimport urllib.request\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\n\nmode = os.environ.get(\"APP_MODE\", \"production\")\nif mode not in {\"production\", \"development\"}:\n    print(json.dumps({\"error\": \"invalid APP_MODE\", \"value\": mode}), flush=True)\n    raise SystemExit(1)\nstartup = int(os.environ.get(\"STARTUP_SECONDS\", \"0\"))\nprint(json.dumps({\"event\": \"initializing\", \"startup_seconds\": startup}), flush=True)\ntime.sleep(startup)\nblocks = []\n\ndef allocate():\n    amount = int(os.environ.get(\"ALLOCATE_MIB\", \"0\"))\n    if not amount:\n        return\n    time.sleep(10)\n    for offset in range(0, amount, 8):\n        blocks.append(bytearray(min(8, amount - offset) * 1024 * 1024))\n        print(json.dumps({\"event\": \"allocation\", \"retained_mib\": min(offset + 8, amount)}), flush=True)\n        time.sleep(1)\n    print(json.dumps({\"event\": \"working_set_ready\", \"retained_mib\": amount}), flush=True)\n\nclass Handler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        status, body = 200, b\"ok\\n\"\n        if self.path not in {\"/\", \"/ready\", \"/live\"}:\n            status, body = 404, b\"unknown path\\n\"\n        elif self.path == \"/\":\n            iterations = int(os.environ.get(\"CPU_ITERATIONS\", \"0\"))\n            if iterations:\n                hashlib.pbkdf2_hmac(\"sha256\", b\"request\", b\"fixed-salt\", iterations)\n            dependency = os.environ.get(\"DEPENDENCY_URL\")\n            if dependency:\n                try:\n                    with urllib.request.urlopen(dependency, timeout=2) as response:\n                        body = response.read()\n                except (urllib.error.URLError, TimeoutError, OSError) as error:\n                    status, body = 502, b\"dependency unavailable\\n\"\n                    print(json.dumps({\"event\": \"dependency_error\", \"url\": dependency, \"error\": str(error)}), flush=True)\n        self.send_response(status)\n        self.send_header(\"Content-Type\", \"text/plain\")\n        self.send_header(\"Content-Length\", str(len(body)))\n        self.end_headers()\n        try:\n            self.wfile.write(body)\n        except (BrokenPipeError, ConnectionResetError):\n            pass\n\nthreading.Thread(target=allocate, daemon=True).start()\nport = int(os.environ.get(\"PORT\", \"8080\"))\nprint(json.dumps({\"event\": \"listening\", \"port\": port}), flush=True)\nThreadingHTTPServer((\"0.0.0.0\", port), Handler).serve_forever()\n"
+        },
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "code",
+          "namespace": "rca-15"
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+          "name": "api",
+          "namespace": "rca-15"
+        },
+        "spec": {
+          "ports": [
+            {
+              "name": "http",
+              "port": 80,
+              "targetPort": 8080
+            }
+          ],
+          "selector": {
+            "app": "api"
+          }
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+          "name": "backend",
+          "namespace": "rca-15"
+        },
+        "spec": {
+          "ports": [
+            {
+              "name": "http",
+              "port": 80,
+              "targetPort": 8080
+            }
+          ],
+          "selector": {
+            "app": "backend"
+          }
+        }
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "api",
+          "namespace": "rca-15"
+        },
+        "spec": {
+          "replicas": 1,
+          "selector": {
+            "matchLabels": {
+              "app": "api"
+            }
+          },
+          "strategy": {
+            "type": "Recreate"
+          },
+          "template": {
+            "metadata": {
+              "labels": {
+                "app": "api"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "command": [
+                    "python",
+                    "-u",
+                    "/app/server.py"
+                  ],
+                  "env": [
+                    {
+                      "name": "DEPENDENCY_URL",
+                      "value": "http://backend"
+                    }
+                  ],
+                  "image": "python:3.12.8-slim",
+                  "imagePullPolicy": "IfNotPresent",
+                  "name": "web",
+                  "ports": [
+                    {
+                      "containerPort": 8080,
+                      "name": "http"
+                    }
+                  ],
+                  "readinessProbe": {
+                    "failureThreshold": 2,
+                    "httpGet": {
+                      "path": "/ready",
+                      "port": "http"
+                    },
+                    "periodSeconds": 3,
+                    "timeoutSeconds": 2
+                  },
+                  "resources": {
+                    "limits": {
+                      "cpu": "500m",
+                      "memory": "256Mi"
+                    },
+                    "requests": {
+                      "cpu": "25m",
+                      "memory": "32Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "mountPath": "/app",
+                      "name": "code",
+                      "readOnly": true
+                    }
+                  ]
+                }
+              ],
+              "terminationGracePeriodSeconds": 1,
+              "volumes": [
+                {
+                  "configMap": {
+                    "name": "code"
+                  },
+                  "name": "code"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "backend",
+          "namespace": "rca-15"
+        },
+        "spec": {
+          "replicas": 1,
+          "selector": {
+            "matchLabels": {
+              "app": "backend"
+            }
+          },
+          "strategy": {
+            "type": "Recreate"
+          },
+          "template": {
+            "metadata": {
+              "labels": {
+                "app": "backend"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "command": [
+                    "python",
+                    "-u",
+                    "/app/server.py"
+                  ],
+                  "env": [
+                    {
+                      "name": "ALLOCATE_MIB",
+                      "value": "128"
+                    }
+                  ],
+                  "image": "python:3.12.8-slim",
+                  "imagePullPolicy": "IfNotPresent",
+                  "name": "web",
+                  "ports": [
+                    {
+                      "containerPort": 8080,
+                      "name": "http"
+                    }
+                  ],
+                  "readinessProbe": {
+                    "failureThreshold": 2,
+                    "httpGet": {
+                      "path": "/ready",
+                      "port": "http"
+                    },
+                    "periodSeconds": 3,
+                    "timeoutSeconds": 2
+                  },
+                  "resources": {
+                    "limits": {
+                      "cpu": "500m",
+                      "memory": "64Mi"
+                    },
+                    "requests": {
+                      "cpu": "25m",
+                      "memory": "32Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "mountPath": "/app",
+                      "name": "code",
+                      "readOnly": true
+                    }
+                  ]
+                }
+              ],
+              "terminationGracePeriodSeconds": 1,
+              "volumes": [
+                {
+                  "configMap": {
+                    "name": "code"
+                  },
+                  "name": "code"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "load",
+          "namespace": "rca-15"
+        },
+        "spec": {
+          "replicas": 1,
+          "selector": {
+            "matchLabels": {
+              "app": "load"
+            }
+          },
+          "strategy": {
+            "type": "Recreate"
+          },
+          "template": {
+            "metadata": {
+              "labels": {
+                "app": "load"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "command": [
+                    "python",
+                    "-u",
+                    "/app/load.py"
+                  ],
+                  "env": [
+                    {
+                      "name": "TARGET_URL",
+                      "value": "http://api"
+                    },
+                    {
+                      "name": "REQUESTS_PER_SECOND",
+                      "value": "2"
+                    }
+                  ],
+                  "image": "python:3.12.8-slim",
+                  "imagePullPolicy": "IfNotPresent",
+                  "name": "web",
+                  "resources": {
+                    "limits": {
+                      "cpu": "250m",
+                      "memory": "128Mi"
+                    },
+                    "requests": {
+                      "cpu": "25m",
+                      "memory": "32Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "mountPath": "/app",
+                      "name": "code",
+                      "readOnly": true
+                    }
+                  ]
+                }
+              ],
+              "terminationGracePeriodSeconds": 1,
+              "volumes": [
+                {
+                  "configMap": {
+                    "name": "code"
+                  },
+                  "name": "code"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "events": [],
+    "logs": [],
+    "metrics": [],
+    "checks": []
+  },
+  "root-cause": {
+    "cause": "Deployment/backend limits its web container to 64Mi although the backend retains a bounded 128 MiB allocation plus interpreter overhead.",
+    "causal_chain": "The backend exceeds its cgroup memory limit and is OOM-killed; backend downtime causes frontend dependency errors and user-visible HTTP 502 responses.",
+    "supporting_evidence": [
+      "Backend termination history shows OOMKilled, the limit is 64Mi, and allocation is configured to retain 128 MiB.",
+      "Correlate backend OOM/restart timestamps and endpoint readiness changes with frontend dependency errors and load-generator HTTP 502 responses.",
+      "The frontend remains healthy without local restarts or resource exhaustion; node conditions exclude node memory pressure."
+    ],
+    "remediation": "Restore only the backend memory limit to 256Mi using app/.",
+    "recovery_check": "The backend completes its allocation without new OOM terminations and frontend requests succeed at the original offered load."
+  }
+}

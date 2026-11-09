@@ -1,0 +1,249 @@
+{
+  "context": {
+    "incident": "The api frontend returns dependency errors while the catalog backend remains healthy.",
+    "time_window": null,
+    "resources": [
+      {
+        "apiVersion": "v1",
+        "kind": "Namespace",
+        "metadata": {
+          "name": "rca-10"
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "data": {
+          "server.py": "import hashlib\nimport json\nimport os\nimport threading\nimport time\nimport urllib.error\nimport urllib.request\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\n\nmode = os.environ.get(\"APP_MODE\", \"production\")\nif mode not in {\"production\", \"development\"}:\n    print(json.dumps({\"error\": \"invalid APP_MODE\", \"value\": mode}), flush=True)\n    raise SystemExit(1)\nstartup = int(os.environ.get(\"STARTUP_SECONDS\", \"0\"))\nprint(json.dumps({\"event\": \"initializing\", \"startup_seconds\": startup}), flush=True)\ntime.sleep(startup)\nblocks = []\n\ndef allocate():\n    amount = int(os.environ.get(\"ALLOCATE_MIB\", \"0\"))\n    if not amount:\n        return\n    time.sleep(10)\n    for offset in range(0, amount, 8):\n        blocks.append(bytearray(min(8, amount - offset) * 1024 * 1024))\n        print(json.dumps({\"event\": \"allocation\", \"retained_mib\": min(offset + 8, amount)}), flush=True)\n        time.sleep(1)\n    print(json.dumps({\"event\": \"working_set_ready\", \"retained_mib\": amount}), flush=True)\n\nclass Handler(BaseHTTPRequestHandler):\n    def do_GET(self):\n        status, body = 200, b\"ok\\n\"\n        if self.path not in {\"/\", \"/ready\", \"/live\"}:\n            status, body = 404, b\"unknown path\\n\"\n        elif self.path == \"/\":\n            iterations = int(os.environ.get(\"CPU_ITERATIONS\", \"0\"))\n            if iterations:\n                hashlib.pbkdf2_hmac(\"sha256\", b\"request\", b\"fixed-salt\", iterations)\n            dependency = os.environ.get(\"DEPENDENCY_URL\")\n            if dependency:\n                try:\n                    with urllib.request.urlopen(dependency, timeout=2) as response:\n                        body = response.read()\n                except (urllib.error.URLError, TimeoutError, OSError) as error:\n                    status, body = 502, b\"dependency unavailable\\n\"\n                    print(json.dumps({\"event\": \"dependency_error\", \"url\": dependency, \"error\": str(error)}), flush=True)\n        self.send_response(status)\n        self.send_header(\"Content-Type\", \"text/plain\")\n        self.send_header(\"Content-Length\", str(len(body)))\n        self.end_headers()\n        try:\n            self.wfile.write(body)\n        except (BrokenPipeError, ConnectionResetError):\n            pass\n\nthreading.Thread(target=allocate, daemon=True).start()\nport = int(os.environ.get(\"PORT\", \"8080\"))\nprint(json.dumps({\"event\": \"listening\", \"port\": port}), flush=True)\nThreadingHTTPServer((\"0.0.0.0\", port), Handler).serve_forever()\n"
+        },
+        "kind": "ConfigMap",
+        "metadata": {
+          "name": "code",
+          "namespace": "rca-10"
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+          "name": "api",
+          "namespace": "rca-10"
+        },
+        "spec": {
+          "ports": [
+            {
+              "name": "http",
+              "port": 80,
+              "targetPort": 8080
+            }
+          ],
+          "selector": {
+            "app": "api"
+          }
+        }
+      },
+      {
+        "apiVersion": "v1",
+        "kind": "Service",
+        "metadata": {
+          "name": "catalog",
+          "namespace": "rca-10"
+        },
+        "spec": {
+          "ports": [
+            {
+              "name": "http",
+              "port": 80,
+              "targetPort": 8080
+            }
+          ],
+          "selector": {
+            "app": "catalog"
+          }
+        }
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "api",
+          "namespace": "rca-10"
+        },
+        "spec": {
+          "replicas": 1,
+          "selector": {
+            "matchLabels": {
+              "app": "api"
+            }
+          },
+          "strategy": {
+            "type": "Recreate"
+          },
+          "template": {
+            "metadata": {
+              "labels": {
+                "app": "api"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "command": [
+                    "python",
+                    "-u",
+                    "/app/server.py"
+                  ],
+                  "env": [
+                    {
+                      "name": "DEPENDENCY_URL",
+                      "value": "http://catalogue"
+                    }
+                  ],
+                  "image": "python:3.12.8-slim",
+                  "imagePullPolicy": "IfNotPresent",
+                  "name": "web",
+                  "ports": [
+                    {
+                      "containerPort": 8080,
+                      "name": "http"
+                    }
+                  ],
+                  "readinessProbe": {
+                    "failureThreshold": 2,
+                    "httpGet": {
+                      "path": "/ready",
+                      "port": "http"
+                    },
+                    "periodSeconds": 3,
+                    "timeoutSeconds": 2
+                  },
+                  "resources": {
+                    "limits": {
+                      "cpu": "500m",
+                      "memory": "256Mi"
+                    },
+                    "requests": {
+                      "cpu": "25m",
+                      "memory": "32Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "mountPath": "/app",
+                      "name": "code",
+                      "readOnly": true
+                    }
+                  ]
+                }
+              ],
+              "terminationGracePeriodSeconds": 1,
+              "volumes": [
+                {
+                  "configMap": {
+                    "name": "code"
+                  },
+                  "name": "code"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "apiVersion": "apps/v1",
+        "kind": "Deployment",
+        "metadata": {
+          "name": "catalog",
+          "namespace": "rca-10"
+        },
+        "spec": {
+          "replicas": 1,
+          "selector": {
+            "matchLabels": {
+              "app": "catalog"
+            }
+          },
+          "strategy": {
+            "type": "Recreate"
+          },
+          "template": {
+            "metadata": {
+              "labels": {
+                "app": "catalog"
+              }
+            },
+            "spec": {
+              "containers": [
+                {
+                  "command": [
+                    "python",
+                    "-u",
+                    "/app/server.py"
+                  ],
+                  "image": "python:3.12.8-slim",
+                  "imagePullPolicy": "IfNotPresent",
+                  "name": "web",
+                  "ports": [
+                    {
+                      "containerPort": 8080,
+                      "name": "http"
+                    }
+                  ],
+                  "readinessProbe": {
+                    "failureThreshold": 2,
+                    "httpGet": {
+                      "path": "/ready",
+                      "port": "http"
+                    },
+                    "periodSeconds": 3,
+                    "timeoutSeconds": 2
+                  },
+                  "resources": {
+                    "limits": {
+                      "cpu": "500m",
+                      "memory": "256Mi"
+                    },
+                    "requests": {
+                      "cpu": "25m",
+                      "memory": "32Mi"
+                    }
+                  },
+                  "volumeMounts": [
+                    {
+                      "mountPath": "/app",
+                      "name": "code",
+                      "readOnly": true
+                    }
+                  ]
+                }
+              ],
+              "terminationGracePeriodSeconds": 1,
+              "volumes": [
+                {
+                  "configMap": {
+                    "name": "code"
+                  },
+                  "name": "code"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ],
+    "events": [],
+    "logs": [],
+    "metrics": [],
+    "checks": []
+  },
+  "root-cause": {
+    "cause": "Deployment/api uses DEPENDENCY_URL=http://catalogue instead of the existing Service/catalog.",
+    "causal_chain": "The misspelled Service hostname fails DNS resolution, so frontend dependency calls fail and return HTTP 502.",
+    "supporting_evidence": [
+      "The configured dependency hostname is catalogue; the available Service is catalog.",
+      "Lookup from the frontend network context fails for catalogue but succeeds for catalog.",
+      "A direct request to http://catalog succeeds and frontend logs show name-resolution errors for the configured URL."
+    ],
+    "remediation": "Restore DEPENDENCY_URL=http://catalog using app/.",
+    "recovery_check": "The frontend resolves its configured dependency and returns successful responses."
+  }
+}

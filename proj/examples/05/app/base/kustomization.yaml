@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: rca-05
+resources:
+- namespace-rca-05.yaml
+- deployment-api.yaml
+- service-api.yaml
+- secret-credentials.yaml
+configMapGenerator:
+- name: code
+  files:
+  - server.py
+generatorOptions:
+  disableNameSuffixHash: true
