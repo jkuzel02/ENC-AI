@@ -36,7 +36,8 @@ Empty arrays mean data was not collected, not that zero events or resources exis
 
 ## Few-shot Examples
 
-### Example Input:
+### Example 1: Service Selector Typo
+**Input:**
 ```json
 {
   "resources": [
@@ -67,7 +68,7 @@ Empty arrays mean data was not collected, not that zero events or resources exis
 }
 ```
 
-### Example Output:
+**Output:**
 ```json
 {
   "agent": "k8s-config-events",
@@ -82,6 +83,121 @@ Empty arrays mean data was not collected, not that zero events or resources exis
   "suspicious_resources": ["Service/api"],
   "significant_events": [],
   "preliminary_assessment": "Traffic through Service/api cannot reach backend Pods due to a typo in the selector (ap1 instead of api)."
+}
+```
+
+### Example 2: Missing Secret Key Reference
+**Input:**
+```json
+{
+  "resources": [
+    {
+      "apiVersion": "v1",
+      "kind": "Secret",
+      "metadata": { "name": "credentials", "namespace": "rca-test" },
+      "data": { "service-key": "<redacted>" }
+    },
+    {
+      "apiVersion": "apps/v1",
+      "kind": "Deployment",
+      "metadata": { "name": "api", "namespace": "rca-test" },
+      "spec": {
+        "template": {
+          "spec": {
+            "containers": [
+              {
+                "name": "web",
+                "env": [
+                  {
+                    "name": "API_TOKEN",
+                    "valueFrom": {
+                      "secretKeyRef": { "name": "credentials", "key": "api-token", "optional": false }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "events": [
+    {
+      "reason": "Failed",
+      "involved_object": "Pod/api-647d9b9649-abcde",
+      "message": "Error: secret \"credentials\" does not have key \"api-token\""
+    }
+  ]
+}
+```
+
+**Output:**
+```json
+{
+  "agent": "k8s-config-events",
+  "anomalies": [
+    {
+      "resource": "Deployment/api",
+      "field": "spec.template.spec.containers[0].env[0].valueFrom.secretKeyRef.key",
+      "issue": "Mandatory secretKeyRef points to key 'api-token' which is missing from Secret/credentials (only 'service-key' exists).",
+      "severity": "high"
+    }
+  ],
+  "suspicious_resources": ["Deployment/api", "Secret/credentials"],
+  "significant_events": [
+    {
+      "reason": "Failed",
+      "involved_object": "Pod/api-647d9b9649-abcde",
+      "message": "Error: secret \"credentials\" does not have key \"api-token\""
+    }
+  ],
+  "preliminary_assessment": "Container creation fails with CreateContainerConfigError because the required secret key 'api-token' is absent from Secret/credentials."
+}
+```
+
+### Example 3: Missing RBAC API Verb
+**Input:**
+```json
+{
+  "resources": [
+    {
+      "apiVersion": "rbac.authorization.k8s.io/v1",
+      "kind": "Role",
+      "metadata": { "name": "config-reader", "namespace": "rca-test" },
+      "rules": [
+        {
+          "apiGroups": [""],
+          "resources": ["configmaps"],
+          "verbs": ["get"]
+        }
+      ]
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "ServiceAccount",
+      "metadata": { "name": "controller", "namespace": "rca-test" }
+    }
+  ],
+  "events": []
+}
+```
+
+**Output:**
+```json
+{
+  "agent": "k8s-config-events",
+  "anomalies": [
+    {
+      "resource": "Role/config-reader",
+      "field": "rules[0].verbs",
+      "issue": "Role grants 'get' on configmaps but omits 'list', which will cause authorization failure if the controller needs to enumerate configmaps.",
+      "severity": "medium"
+    }
+  ],
+  "suspicious_resources": ["Role/config-reader"],
+  "significant_events": [],
+  "preliminary_assessment": "The workload service account controller possesses only get permission on configmaps; listing configmaps will be denied with HTTP 403."
 }
 ```
 
