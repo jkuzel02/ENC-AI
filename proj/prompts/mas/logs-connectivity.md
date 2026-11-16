@@ -33,7 +33,8 @@ Empty arrays mean data was not collected, not that zero logs or checks occurred.
 
 ## Few-shot Examples
 
-### Example Input:
+### Example 1: Downstream Service DNS Lookup Failure
+**Input:**
 ```json
 {
   "logs": [
@@ -48,7 +49,7 @@ Empty arrays mean data was not collected, not that zero logs or checks occurred.
 }
 ```
 
-### Example Output:
+**Output:**
 ```json
 {
   "agent": "logs-connectivity",
@@ -68,6 +69,73 @@ Empty arrays mean data was not collected, not that zero logs or checks occurred.
   ],
   "runtime_failure_mode": "DNS resolution failure for configured downstream dependency (catalogue vs catalog).",
   "preliminary_assessment": "The application fails downstream requests because it is configured with a misspelled dependency hostname."
+}
+```
+
+### Example 2: Invalid Configuration Value Causing Fatal Exit
+**Input:**
+```json
+{
+  "logs": [
+    { "timestamp": "2026-11-09T10:05:00Z", "container": "web", "message": "{\"error\": \"invalid APP_MODE\", \"value\": \"unsupported\"}" },
+    { "timestamp": "2026-11-09T10:05:00Z", "container": "web", "message": "SystemExit: 1" }
+  ],
+  "checks": []
+}
+```
+
+**Output:**
+```json
+{
+  "agent": "logs-connectivity",
+  "log_findings": [
+    {
+      "source": "web",
+      "level": "error",
+      "summary": "Startup validation failed with 'invalid APP_MODE: unsupported', provoking immediate SystemExit with code 1."
+    }
+  ],
+  "connectivity_findings": [],
+  "runtime_failure_mode": "Fatal configuration validation failure during application startup.",
+  "preliminary_assessment": "The process crashes immediately upon startup because APP_MODE is set to 'unsupported', leading to repeated CrashLoopBackOff restarts."
+}
+```
+
+### Example 3: Egress Blocked by NetworkPolicy
+**Input:**
+```json
+{
+  "logs": [
+    { "timestamp": "2026-11-09T10:10:05Z", "container": "web", "message": "{\"event\": \"dependency_error\", \"url\": \"http://backend:8080\", \"error\": \"timed out\"}" }
+  ],
+  "checks": [
+    { "check": "dns_lookup", "source": "api", "target": "backend", "success": true, "details": "Resolved to 10.96.88.20" },
+    { "check": "tcp_connect", "source": "api", "target": "backend:8080", "success": false, "details": "Connection timed out" },
+    { "check": "tcp_connect", "source": "control", "target": "backend:8080", "success": true, "details": "Connected successfully" }
+  ]
+}
+```
+
+**Output:**
+```json
+{
+  "agent": "logs-connectivity",
+  "log_findings": [
+    {
+      "source": "web",
+      "level": "error",
+      "summary": "Outbound connection to http://backend:8080 timed out despite successful DNS resolution."
+    }
+  ],
+  "connectivity_findings": [
+    {
+      "target": "backend:8080",
+      "status": "failed",
+      "details": "TCP connection from client 'api' times out, whereas the same connection from 'control' pod succeeds, indicating an active NetworkPolicy egress restriction."
+    }
+  ],
+  "runtime_failure_mode": "NetworkPolicy egress packet drop preventing TCP traffic to backend on port 8080.",
+  "preliminary_assessment": "The application's backend calls fail due to missing egress allowance in NetworkPolicy, while DNS lookup continues to succeed."
 }
 ```
 

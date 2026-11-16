@@ -38,7 +38,8 @@ You receive:
 
 ## Few-shot Examples
 
-### Example Input Context:
+### Example 1: Single-Tier Memory Limit Saturation (OOMKilled)
+**Input Context & Agent Reports:**
 ```json
 {
   "context": {
@@ -65,7 +66,8 @@ You receive:
 }
 ```
 
-### Example Output:
+**Output:**
+```json
 {
   "cause": "Deployment/api sets the web container memory limit to 64Mi although its normal retained allocation is 128 MiB plus interpreter overhead.",
   "causal_chain": "The bounded working set exceeds the container cgroup memory limit, causing OOM termination, restarts, and interrupted requests.",
@@ -77,6 +79,106 @@ You receive:
   "remediation": "Restore the 256Mi web container memory limit by applying app/.",
   "recovery_check": "The worker logs working_set_ready with retained_mib 128 and remains running without new OOM terminations for at least two minutes."
 }
+```
+
+### Example 2: Cascading Multi-Tier Outage (Backend OOM Causing Frontend 502)
+**Input Context & Agent Reports:**
+```json
+{
+  "context": {
+    "incident": "Clients receive intermittent HTTP 502 Bad Gateway errors when accessing the frontend api service.",
+    "time_window": { "start": "2026-11-09T10:15:00Z", "end": "2026-11-09T10:20:00Z" }
+  },
+  "agent_reports": {
+    "k8s-config-events": {
+      "anomalies": [
+        { "resource": "Deployment/backend", "field": "spec.template.spec.containers[0].resources.limits.memory", "issue": "Memory limit is 64Mi while backend ALLOCATE_MIB is 128." },
+        { "resource": "Deployment/api", "field": "none", "issue": "Frontend configuration is valid and healthy." }
+      ],
+      "significant_events": [{ "reason": "OOMKilling", "involved_object": "Pod/backend-xyz", "message": "Memory cgroup out of memory" }]
+    },
+    "logs-connectivity": {
+      "log_findings": [
+        { "source": "api", "summary": "Frontend logs dependency_error HTTP 502 from http://backend:8080." },
+        { "source": "backend", "summary": "Backend process terminated repeatedly during memory allocation." }
+      ],
+      "runtime_failure_mode": "Backend crashes causing frontend connection failure"
+    },
+    "metrics-telemetry": {
+      "resource_findings": [
+        { "metric_name": "backend_memory_working_set", "observed_value": "64 MiB", "status": "saturated" },
+        { "metric_name": "frontend_memory_working_set", "observed_value": "35 MiB", "status": "normal" }
+      ],
+      "saturation_identified": "backend_memory_limit_exceeded"
+    }
+  }
+}
+```
+
+**Output:**
+```json
+{
+  "cause": "Deployment/backend limits its web container to 64Mi although the backend retains a bounded 128 MiB allocation plus interpreter overhead.",
+  "causal_chain": "The backend exceeds its cgroup memory limit and is OOM-killed; backend downtime causes frontend dependency errors and user-visible HTTP 502 responses.",
+  "supporting_evidence": [
+    "Backend termination history shows OOMKilled, the limit is 64Mi, and allocation is configured to retain 128 MiB.",
+    "Correlate backend OOM/restart timestamps and endpoint readiness changes with frontend dependency errors and load-generator HTTP 502 responses.",
+    "The frontend remains healthy without local restarts or resource exhaustion; node conditions exclude node memory pressure."
+  ],
+  "remediation": "Restore only the backend memory limit to 256Mi using app/.",
+  "recovery_check": "The backend completes its allocation without new OOM terminations and frontend requests succeed at the original offered load."
+}
+```
+
+### Example 3: Premature Liveness Probe Killing Slow-Starting Application
+**Input Context & Agent Reports:**
+```json
+{
+  "context": {
+    "incident": "The api workload is caught in a restart loop and never becomes Ready despite non-zero CPU and memory headroom.",
+    "time_window": { "start": "2026-11-09T10:30:00Z", "end": "2026-11-09T10:35:00Z" }
+  },
+  "agent_reports": {
+    "k8s-config-events": {
+      "anomalies": [
+        { "resource": "Deployment/api", "field": "spec.template.spec.containers[0].livenessProbe", "issue": "Liveness probe begins after 5s with 15s failure budget (period 5s, threshold 3), while STARTUP_SECONDS is 40s. Template has no startupProbe." }
+      ],
+      "significant_events": [
+        { "reason": "Unhealthy", "involved_object": "Pod/api-probe", "message": "Liveness probe failed: HTTP probe failed with statuscode: 500/connection refused" },
+        { "reason": "Killing", "involved_object": "Pod/api-probe", "message": "Container web failed liveness probe, will be restarted" }
+      ]
+    },
+    "logs-connectivity": {
+      "log_findings": [
+        { "source": "web", "summary": "Container logs 'initializing, startup_seconds: 40' followed by restart before 'listening' is ever printed." }
+      ],
+      "runtime_failure_mode": "Killed by kubelet before listener startup completes"
+    },
+    "metrics-telemetry": {
+      "resource_findings": [
+        { "metric_name": "container_memory_working_set_bytes", "observed_value": "28 MiB", "limit_value": "512Mi", "status": "normal" },
+        { "metric_name": "container_cpu_usage_seconds_total", "observed_value": "normal", "status": "normal" }
+      ],
+      "saturation_identified": null
+    }
+  }
+}
+```
+
+**Output:**
+```json
+{
+  "cause": "Deployment/api has a liveness probe with a short failure budget and no startup probe despite a 40-second initialization.",
+  "causal_chain": "The HTTP listener is unavailable during normal initialization; repeated liveness failures make kubelet restart the container before startup completes.",
+  "supporting_evidence": [
+    "STARTUP_SECONDS=40; liveness starts at 5 seconds with periodSeconds=5 and failureThreshold=3.",
+    "The faulty Pod template has no startupProbe.",
+    "Liveness failure and killing events occur before the application logs listening; memory evidence does not indicate OOM."
+  ],
+  "remediation": "Restore the startup probe in app/ with a 60-second failure budget.",
+  "recovery_check": "Initialization completes, the HTTP listener starts, and subsequent startup, readiness, and liveness checks pass without more restarts."
+}
+```
 
 ## Expected Format of Output
 Output exactly one valid JSON object with these five keys:

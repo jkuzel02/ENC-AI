@@ -35,7 +35,8 @@ Empty arrays mean metrics were not captured during the observation window, NOT t
 
 ## Few-shot Examples
 
-### Example Input:
+### Example 1: Container Memory Limit Saturation (cgroup OOM)
+**Input:**
 ```json
 {
   "metrics": [
@@ -60,7 +61,7 @@ Empty arrays mean metrics were not captured during the observation window, NOT t
 }
 ```
 
-### Example Output:
+**Output:**
 ```json
 {
   "agent": "metrics-telemetry",
@@ -82,6 +83,97 @@ Empty arrays mean metrics were not captured during the observation window, NOT t
   "throttling_detected": false,
   "saturation_identified": "container_memory_limit_exceeded",
   "preliminary_assessment": "The container was killed by cgroup OOM because its memory working set grew to the 64Mi limit while the node had plenty of available memory."
+}
+```
+
+### Example 2: CPU CFS Throttling under Steady Load
+**Input:**
+```json
+{
+  "metrics": [
+    {
+      "metric": "container_cpu_cfs_throttled_periods_total",
+      "pod": "api-load-123",
+      "container": "web",
+      "samples": [
+        ["2026-11-09T10:00:00Z", 10],
+        ["2026-11-09T10:01:00Z", 250],
+        ["2026-11-09T10:02:00Z", 520]
+      ]
+    },
+    {
+      "metric": "http_request_duration_seconds_p99",
+      "service": "api",
+      "samples": [
+        ["2026-11-09T10:00:00Z", 0.05],
+        ["2026-11-09T10:01:00Z", 1.85],
+        ["2026-11-09T10:02:00Z", 3.20]
+      ]
+    }
+  ],
+  "time_window": { "start": "2026-11-09T10:00:00Z", "end": "2026-11-09T10:02:00Z" },
+  "resource_limits": { "limits": { "cpu": "50m", "memory": "256Mi" } }
+}
+```
+
+**Output:**
+```json
+{
+  "agent": "metrics-telemetry",
+  "resource_findings": [
+    {
+      "metric_name": "container_cpu_cfs_throttled_periods_total",
+      "observed_value": "520 throttled periods",
+      "limit_value": "50m",
+      "status": "throttled",
+      "analysis": "Sharp growth in throttled periods indicates severe cgroup CPU quota restriction under incoming request load."
+    },
+    {
+      "metric_name": "http_request_duration_seconds_p99",
+      "observed_value": "3.20s",
+      "limit_value": null,
+      "status": "elevated",
+      "analysis": "P99 latency surged from 50ms to 3.2s synchronously with the surge in CPU throttling."
+    }
+  ],
+  "throttling_detected": true,
+  "saturation_identified": "cpu_quota_throttling",
+  "preliminary_assessment": "Severe cgroup CPU throttling due to an unrealistically low 50m CPU limit causes high latency and request queuing under load."
+}
+```
+
+### Example 3: Unfulfillable CPU Request Exceeding Node Capacity
+**Input:**
+```json
+{
+  "metrics": [
+    {
+      "metric": "kube_node_status_allocatable_cpu_cores",
+      "node": "local-control-plane",
+      "samples": [["2026-11-09T10:00:00Z", 4.0]]
+    }
+  ],
+  "time_window": { "start": "2026-11-09T10:00:00Z", "end": "2026-11-09T10:01:00Z" },
+  "resource_limits": { "requests": { "cpu": "1000", "memory": "128Mi" } }
+}
+```
+
+**Output:**
+```json
+{
+  "agent": "metrics-telemetry",
+  "resource_findings": [
+    {
+      "metric_name": "kube_node_status_allocatable_cpu_cores",
+      "observed_value": "4.0 cores",
+      "limit_value": "1000 cores (requested)",
+      "status": "saturated",
+      "analysis": "Requested CPU (1000 cores) vastly exceeds total allocatable node CPU capacity (4.0 cores)."
+    }
+  ],
+  "throttling_detected": false,
+  "saturation_identified": "node_capacity_exceeded_by_request",
+  "preliminary_assessment": "Pod cannot be scheduled because its 1000 CPU core request exceeds the 4-core allocatable capacity of all available nodes."
 }
 ```
 
