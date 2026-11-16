@@ -81,5 +81,7 @@ privileged credentials outside the agent environment.
 - Push to `main`, directly or by force.
 - Force-push or rewrite history on shared branches.
 - Commit secrets, tokens, or kubeconfig files.
+- Edit the `README.md` file. If you have made any change, undo it NOW.
 - Merge or approve a PR.
+
 
