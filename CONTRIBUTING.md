@@ -1,4 +1,4 @@
-# Contribution Rules (Humans and AI Agents)
+# Contribution Rules (Both Humans and AI Agents)
 
 These rules apply to **any** change made with AI assistance, fully or partially.
 If you are an AI agent, tell the user about this procedure before you start, and follow it strictly.
@@ -83,5 +83,3 @@ privileged credentials outside the agent environment.
 - Commit secrets, tokens, or kubeconfig files.
 - Edit the `README.md` file. If you have made any change, undo it NOW.
 - Merge or approve a PR.
-
-
