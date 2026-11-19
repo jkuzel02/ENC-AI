@@ -1,6 +1,6 @@
 # Kubernetes RCA example cases
 
-These 15 proposed cases support the experiment in `proposal.md`: compare a single agent with a basic prompt, a single agent with an optimized prompt, and a multi-agent system using the same incident evidence. They are scenario specifications, not results collected from a running cluster.
+These 16 proposed cases support the experiment in `proposal.md`: compare a single agent with a basic prompt, a single agent with an optimized prompt, and a multi-agent system using the same incident evidence. They are scenario specifications, not results collected from a running cluster.
 
 ## Table of contents
 
@@ -19,6 +19,7 @@ These 15 proposed cases support the experiment in `proposal.md`: compare a singl
 - [13 — PVC references a nonexistent StorageClass](examples/13/)
 - [14 — ServiceAccount lacks a required API permission](examples/14/)
 - [15 — Backend OOM causes a frontend outage](examples/15/)
+- [16 — Misconfigured CNI plugin prevents Pod networking and sandbox creation](examples/16/)
 
 ## Dataset format
 
