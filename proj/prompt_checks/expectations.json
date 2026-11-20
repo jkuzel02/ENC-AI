@@ -13,5 +13,6 @@
   "12": [["cpu"], ["request", "requests"], ["1000", "1,000"]],
   "13": [["storageclass", "storage class"], ["rca-missing-storage"]],
   "14": [["config-reader", "role"], ["list"], ["configmap", "configmaps"]],
-  "15": [["backend"], ["64mi", "64 mib", "64mib", "64 mi"], ["128", "128mi", "128mib"]]
+  "15": [["backend"], ["64mi", "64 mib", "64mib", "64 mi"], ["128", "128mi", "128mib"]],
+  "16": [["cni"], ["nonexistent-cni-plugin", "10-kindnet.conflist"], ["sandbox", "pod", "network", "networking"]]
 }
