@@ -26,7 +26,6 @@ Working in this repo requires the `gh` tool installed. Check the presence of the
 
 4. **Pull request.** Open a PR only when all changes are finished. Before opening it:
    - The change addresses a linked issue.
-   - If `proj/k8s/` was touched, the setup still works (`proj/k8s/bootstrap.sh`).
    - The PR description states *what* changed, *why*, and *how it was tested*.
 
 5. **Cleanup.** After a PR is merged (or before starting unrelated work), switch back to `main`, run `git pull --ff-only`, and delete the merged local branch (`git branch -d <branch>`).
